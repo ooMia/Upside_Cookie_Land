@@ -1,114 +1,29 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="24.7.8">
-  <diagram name="페이지-1" id="elgvz0MD2874TuV1VdrQ">
-    <mxGraphModel>
+  <diagram id="3cFQ9Y0VJxpYQzrEPY2X" name="Overview">
+    <mxGraphModel dx="984" dy="666" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="2" value="Solidity dApp using Proxy structure" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry width="1743" height="388" as="geometry" />
+        <mxCell id="_VIjRaBYLu4TXCm6gSEv-1" value="ERC20: Cookie" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="280" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="3" value="User" style="rounded=1;absoluteArcSize=1;arcSize=14;whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
-          <mxGeometry x="552" y="58" width="47" height="34" as="geometry" />
+        <mxCell id="_VIjRaBYLu4TXCm6gSEv-2" value="Logic: Game" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="200" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="4" value="Actors" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="2">
-          <mxGeometry x="28" y="33" width="1336" height="338" as="geometry" />
+        <mxCell id="_VIjRaBYLu4TXCm6gSEv-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_VIjRaBYLu4TXCm6gSEv-3" target="_VIjRaBYLu4TXCm6gSEv-5">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="5" value="Proxy Contract" style="rounded=1;absoluteArcSize=1;arcSize=14;whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
-          <mxGeometry x="269" y="312" width="121" height="34" as="geometry" />
+        <mxCell id="_VIjRaBYLu4TXCm6gSEv-3" value="Proxy" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="360" width="120" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="6" value="Resolver" style="rounded=1;absoluteArcSize=1;arcSize=14;whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
-          <mxGeometry x="881" y="312" width="75" height="34" as="geometry" />
+        <mxCell id="_VIjRaBYLu4TXCm6gSEv-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="_VIjRaBYLu4TXCm6gSEv-5" target="_VIjRaBYLu4TXCm6gSEv-2">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="7" value="Game Contract" style="rounded=1;absoluteArcSize=1;arcSize=14;whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
-          <mxGeometry x="194" y="185" width="123" height="34" as="geometry" />
+        <mxCell id="_VIjRaBYLu4TXCm6gSEv-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;startArrow=classic;startFill=1;" edge="1" parent="1" source="_VIjRaBYLu4TXCm6gSEv-5" target="_VIjRaBYLu4TXCm6gSEv-1">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="8" value="Admin" style="rounded=1;absoluteArcSize=1;arcSize=14;whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
-          <mxGeometry x="1215" y="58" width="60" height="34" as="geometry" />
-        </mxCell>
-        <mxCell id="9" value="Proxy Admin" style="rounded=1;absoluteArcSize=1;arcSize=14;whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
-          <mxGeometry x="1419" y="185" width="103" height="34" as="geometry" />
-        </mxCell>
-        <mxCell id="10" value="Resolver Admin" style="rounded=1;absoluteArcSize=1;arcSize=14;whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="2">
-          <mxGeometry x="1572" y="185" width="124" height="34" as="geometry" />
-        </mxCell>
-        <mxCell id="11" value="Maintainers" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="2">
-          <mxGeometry x="1384" y="160" width="347" height="84" as="geometry" />
-        </mxCell>
-        <mxCell id="12" value="Deposit ERC20" style="curved=1;startArrow=none;endArrow=block;exitX=-0.01;exitY=0.94;entryX=0.95;entryY=0;" edge="1" parent="2" source="3" target="5">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="496" y="126" />
-              <mxPoint x="496" y="278" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="13" value="Supply LP for commission fee distribution" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.56;entryX=1;entryY=0.22;" edge="1" parent="2" source="3" target="6">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1126" y="126" />
-              <mxPoint x="1126" y="278" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="14" value="Call functions" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.3;entryY=0;" edge="1" parent="2" source="7" target="5">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="256" y="278" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="15" value="Update contracts using EOA" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0;entryY=0.21;" edge="1" parent="2" source="8" target="9">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1245" y="160" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="16" value="Update LP distribution strategies" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.8;entryY=0;" edge="1" parent="2" source="10" target="6">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1634" y="244" />
-              <mxPoint x="988" y="278" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="17" value="Pay game fees using ERC20" style="curved=1;startArrow=none;endArrow=block;exitX=-0.01;exitY=0.66;entryX=0.86;entryY=0;" edge="1" parent="2" source="3" target="7">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="364" y="126" />
-              <mxPoint x="364" y="160" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="18" value="Distribute rewards in ERC20" style="curved=1;startArrow=none;endArrow=block;exitX=0.15;exitY=0;entryX=-0.01;entryY=0.57;" edge="1" parent="2" source="7" target="3">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="148" y="160" />
-              <mxPoint x="148" y="126" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="19" value="Get LP supply from User" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.28;entryX=0.99;entryY=0.94;" edge="1" parent="2" source="6" target="3">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="654" y="278" />
-              <mxPoint x="654" y="126" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="20" value="Receive rewards from LP" style="curved=1;startArrow=none;endArrow=block;exitX=0.99;exitY=0.62;entryX=0.2;entryY=0;" edge="1" parent="2" source="3" target="6">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="849" y="126" />
-              <mxPoint x="849" y="278" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="21" value="LP for commission fee distribution" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="741" y="438" width="261" height="34" as="geometry" />
-        </mxCell>
-        <mxCell id="22" value="Usage of ERC20 for playing games" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="743" y="521" width="257" height="34" as="geometry" />
+        <mxCell id="_VIjRaBYLu4TXCm6gSEv-5" value="Logic: Station" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="280" width="120" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
