@@ -1,66 +1,31 @@
-## Foundry
+![image](https://github.com/user-attachments/assets/ddaa8f35-9029-4e84-b2db-928c27e51d15)
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+# Upside_Cookie_Land
 
-Foundry consists of:
+`Upside_Cookie_Land`에 오신 것을 환영합니다. `쿠키` 토큰으로 게임을 즐기고, 상금을 획득하세요. 유동성 풀에 자금을 예치하면, 프로토콜에서 발생하는 수수료를 이자로 받을 수 있습니다. 현재는 가위바위보 게임만 제공하고 있습니다. 앞으로 다양한 게임이 추가될 예정이니 기대해주세요.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+# 쿠키 토큰
 
-## Documentation
+토큰은 기본적으로 ETH와 1:1 비율로 교환되고, jackpot 상금에 따라 가격이 상승합니다. 최대 2배까지 상승할 수 있습니다. 
 
-https://book.getfoundry.sh/
+# 게임 소개
 
-## Usage
+struct Game을 참고하여 함수 `play(Game)`를 호출하는 것으로 게임을 시작합니다.
 
-### Build
+## 가위바위보 (id: 0)
 
-```shell
-$ forge build
-```
+`쿠키` 코인을 사용하여 가위바위보 게임을 즐기세요. 게임 결과에 따라 상금을 획득하거나 잃을 수 있습니다. 게임 결과는 컨트랙트 내부의 난수를 통해 생성되며, 사용자는 이를 통해 게임 결과를 검증할 수 있습니다.
 
-### Test
+### 게임 규칙
 
-```shell
-$ forge test
-```
+참가비: 100 이상의 `쿠키` 코인
 
-### Format
+### 사용자 입력
 
-```shell
-$ forge fmt
-```
+enum RPS { Rock, Paper, Scissors }에 대해 Option[]으로 사용자의 입력을 전달받습니다. 1개 이상의 Option을 전달해야 합니다. 2개 이상의 Option에 대해, 그 결과에 따라 상금이 책정됩니다. 한 번이라도 패배하면 모든 상금을 잃습니다.
 
-### Gas Snapshots
+### 결과
 
-```shell
-$ forge snapshot
-```
+승리: 1.95배, 무승부: 0.95배, 패배: 0.00배
 
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+결과로 난수 생성에 사용된 byte32를 반환하며, 사용자는 이를 통해 게임 결과를 검증할 수 있습니다.

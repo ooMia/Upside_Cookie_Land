@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: AGPL-3.0
-pragma solidity >=0.8.0 <0.9.0;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity >=0.8.26 <0.9.0;
 
 contract ProxyTest {
     function setUp() public {}
