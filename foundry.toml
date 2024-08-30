@@ -1,0 +1,18 @@
+[profile.default]
+evm_version = "cancun"
+solc_version = "0.8.26"
+verbosity = 2
+
+[rpc_endpoints]
+local = "${LOCAL_RPC_URL}"
+upside = "${UPSIDE_RPC_URL}"
+
+# https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+# https://book.getfoundry.sh/config/
+# https://github.com/juanfranblanco/vscode-solidity?tab=readme-ov-file
+# forge tree
+# forge geiger
+# forge coverage
+
+[fmt]
+sort_imports = true

@@ -1,0 +1,34 @@
+{
+  "name": "upside_practice_project",
+  "version": "0.0.1",
+  "description": "upside_practice_project",
+  "directories": {
+    "lib": "lib",
+    "test": "test",
+    "script": "script",
+    "proxy": "src/proxy"
+  },
+  "scripts": {
+    "install": "forge install && forge update && npm run remapping",
+    "test": "npm run format && forge test || forge coverage",
+    "format": "forge fmt",
+    "build": "forge build",
+    "compile": "forge compile",
+    "remapping": "forge remappings > remappings.txt",
+    "deploy": "forge script script/Deploy.s.sol:Deploy",
+    "info": "cast client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ooMia/Upside_Practice_Project.git"
+  },
+  "keywords": [
+    "upside"
+  ],
+  "author": "ooMia",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/ooMia/Upside_Practice_Project/issues"
+  },
+  "homepage": "https://github.com/ooMia/Upside_Practice_Project#readme"
+}
