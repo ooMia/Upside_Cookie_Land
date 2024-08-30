@@ -1,13 +1,15 @@
+본격 개발 들어가기 전에 컨트랙트 역할이랑 함수 명명하고, 설명 자세하게 해두기
+대신 너무 깊게 들어가지 말고, 최대한 간소화해서 v1 만들기
+패턴 신경쓰지 말고 일단 개발하고, 나중에 리팩토링 하기
+
+랜덤 받아오는 것도 중요함. 이것도 따로 빼두고
+간단한 오라클 정도는 만들어볼까
+
 // TODO 코드 패턴: State Machine
-
 // TODO 코드 패턴: Proxy Pattern
-
 // TODO 코드 패턴: Multicall Pattern
-
 // TODO 코드 패턴: Checks Effects Interactions
-
 // TODO 코드 패턴: [Pull over Push](https://fravoll.github.io/solidity-patterns/pull_over_push.html)
-
 // TODO 코드 패턴: Emergency Stop
 
 // TODO 도전 과제 #1: 추가 패턴 [secure_ether_transfer](https://fravoll.github.io/solidity-patterns/secure_ether_transfer.html)

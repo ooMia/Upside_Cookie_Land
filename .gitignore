@@ -13,8 +13,9 @@ docs/
 # Dotenv file
 .env
 
-# Node modules
+# Yarn Environment
 node_modules/
+.yarn
 
 # vscode
 .vscode
