@@ -9,9 +9,9 @@
     "proxy": "src/proxy"
   },
   "scripts": {
-    "install": "forge install && forge update && npm run remapping",
+    "install": "npm install --ignore-scripts && forge install && forge update && npm run remapping ",
     "test": "npm run format && forge test || forge coverage",
-    "format": "forge fmt",
+    "format": "prettier --write . && forge fmt",
     "build": "forge build",
     "compile": "forge compile",
     "remapping": "forge remappings > remappings.txt",
@@ -30,5 +30,12 @@
   "bugs": {
     "url": "https://github.com/ooMia/Upside_Practice_Project/issues"
   },
-  "homepage": "https://github.com/ooMia/Upside_Practice_Project#readme"
+  "homepage": "https://github.com/ooMia/Upside_Practice_Project#readme",
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-solidity": "^1.4.1"
+  },
+  "engines": {
+    "node": ">=22.6.0"
+  }
 }
