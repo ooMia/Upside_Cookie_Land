@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-
 
 interface ILogic {
     struct User {
@@ -55,7 +53,6 @@ abstract contract Logic is ILogic, Ownable {
 // TODO 도전 과제 #3: 취약점
 
 // TODO 도전과제 #4: 성능/가스 최적화
-
 
 // TODO Ownable 패턴
 // TODO Pausable 패턴
