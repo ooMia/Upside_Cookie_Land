@@ -6,8 +6,8 @@ import "forge-std/Test.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {MockERC20} from "forge-std/mocks/MockERC20.sol";
 
-import {IStation, Station} from "src/logic/Station.sol";
-import {IOracle, Oracle} from "src/util/Oracle.sol";
+import {IStation, Station} from "logic/Station.sol";
+import {IOracle, Oracle} from "util/Oracle.sol";
 
 contract StationTest is Test {
     Station station;

@@ -4,9 +4,10 @@ pragma solidity ^0.8.26;
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {IGameProxy} from "src/Proxy.sol";
-import {GameMeta, IGame} from "src/logic/Game.sol";
-import {IOracle} from "src/util/Oracle.sol";
+
+import {GameMeta, IGame} from "logic/Game.sol";
+import {IOracle} from "util/Oracle.sol";
+import {IGameProxy} from "util/Proxy.sol";
 
 struct User {
     uint256 cookie;
@@ -14,8 +15,6 @@ struct User {
 }
 
 interface IStation {
-
-
     function buyCookie(uint256 _amount) external payable;
 
     function sellCookie(uint256 _amount) external;
@@ -42,7 +41,7 @@ contract Station is IStation, Ownable {
     mapping(address => User) internal users;
     uint256 internal jackpot;
 
-    constructor(IOracle _oracle, IERC20 _cookie) Ownable() {
+    constructor(IOracle _oracle, IERC20 _cookie) Ownable(msg.sender) {
         oracle = IOracle(_oracle);
         cookie = IERC20(_cookie);
         cookie.approve(address(msg.sender), type(uint256).max);

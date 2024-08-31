@@ -3,7 +3,7 @@ pragma solidity ^0.8.26;
 
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
-import {GameMeta, IGame} from "src/logic/Game.sol";
+import {GameMeta, IGame} from "logic/Game.sol";
 
 contract StationProxy is ERC1967Proxy {
     constructor(address _implementation) ERC1967Proxy(_implementation, "") {}

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-import {Game, GamePlayed} from "src/logic/Game.sol";
-import {IOracle} from "src/util/Oracle.sol";
+import {Game, GamePlayed} from "logic/Game.sol";
+import {IOracle} from "util/Oracle.sol";
 
 // /**
 //  * @dev Function that should revert when `msg.sender` is not authorized to upgrade the contract. Called by

@@ -5,10 +5,11 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {MockERC20} from "forge-std/mocks/MockERC20.sol";
-import {GameProxy, StationProxy} from "src/Proxy.sol";
-import {RPS} from "src/logic/RPS.sol";
-import {Station} from "src/logic/Station.sol";
-import {Oracle} from "src/util/Oracle.sol";
+
+import {RPS} from "logic/RPS.sol";
+import {Station} from "logic/Station.sol";
+import {Oracle} from "util/Oracle.sol";
+import {GameProxy, StationProxy} from "util/Proxy.sol";
 
 contract StationTest is Test {
     StationProxy station;

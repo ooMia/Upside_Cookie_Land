@@ -2,14 +2,15 @@
 pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
-import {GameProxy} from "src/Proxy.sol";
-import {GameMeta, GamePlayed} from "src/logic/Game.sol";
-import {Hand, RPS} from "src/logic/RPS.sol";
+
+import {GameMeta, GamePlayed} from "logic/Game.sol";
+import {Hand, RPS} from "logic/RPS.sol";
+import {GameProxy} from "util/Proxy.sol";
 
 contract RPSProxyTest is Test {
-    RPS public rps;
-    GameProxy public gameProxy;
-    Hand[] public hands;
+    RPS rps;
+    GameProxy gameProxy;
+    Hand[] hands;
 
     function setUp() public {
         rps = new RPS();
