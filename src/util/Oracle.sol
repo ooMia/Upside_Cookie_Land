@@ -1,7 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-import {IOracle} from "src/Interface.sol";
+/// @title Oracle interface
+/// @dev 임시로 구현된 형태의 오라클 사용을 위한 인터페이스
+interface IOracle {
+    /// @dev set the random seed
+    // function setRandomSeed(bytes32) external;
+
+    /// @dev Get the random hash by msg.sender and its seed
+    function getRandomHash() external view returns (bytes32);
+
+    /// @dev Get random numbers by given hash
+    function getRandomUint8(bytes32) external pure returns (uint8[] memory);
+}
 
 /// @title Oracle contract
 /// @dev 사용자로부터 미래에 존재하는 임의의 블록 번호를 부여받고, 해당 블록의 해시값을 이용하여 랜덤 값을 생성하는 컨트랙트
