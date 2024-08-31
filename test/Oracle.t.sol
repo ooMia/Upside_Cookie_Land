@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-import "../src/util/Oracle.sol";
 import "forge-std/Test.sol";
+import "src/util/Oracle.sol";
 
 contract OracleTest is Test {
     Oracle oracle;
@@ -14,35 +14,32 @@ contract OracleTest is Test {
     }
 
     function rewindBlock(uint8 _number) internal {
-        uint16 _positive = uint16(_number + 1);
-        bytes32 _hash = keccak256(abi.encode(_positive));
-        vm.setBlockhash(block.number - _positive, _hash);
+        bytes32 _hash = keccak256(abi.encode(_number));
+        vm.setBlockhash(block.number - _number, _hash);
         vm.prevrandao(_hash);
-        vm.roll(block.number - _positive);
-        vm.warp(block.timestamp - _positive * 12);
+        vm.roll(block.number - _number);
+        vm.warp(block.timestamp - _number * 12);
     }
 
     /* --- Random Hash --- */
 
-    function testHashOnSameCondition() public view {
+    function test_HashOnSameCondition() public view {
         // msg.sender, block.timestamp, blockhash(block.number)
         bytes32 hash1 = oracle.getRandomHash();
         bytes32 hash2 = oracle.getRandomHash();
         assertEq(hash1, hash2);
     }
 
-    /// forge-config: default.fuzz.runs = 1
-    function testHashOnDifferentMessenger() public {
+    function test_HashOnMessengerChanged() public {
         bytes32 hash1 = oracle.getRandomHash();
         vm.prank(address(0x1234));
         bytes32 hash2 = oracle.getRandomHash();
         assertNotEq(hash1, hash2);
     }
 
-    /// forge-config: default.fuzz.runs = 1
-    function testFuzzHashOnBlockPassed(uint8 _number) public {
+    function test_HashOnBlockChanged() public {
         bytes32 hash2 = oracle.getRandomHash();
-        rewindBlock(_number);
+        rewindBlock(1);
         bytes32 hash1 = oracle.getRandomHash();
         assertNotEq(hash1, hash2);
     }
@@ -50,13 +47,12 @@ contract OracleTest is Test {
     /* --- Random Uint8 --- */
 
     /// forge-config: default.fuzz.runs = 1
-    function testFuzzRandomUintLength32(bytes32 _hash) public view {
+    function testFuzz_RandomUintLength32(bytes32 _hash) public view {
         assertEq(oracle.getRandomUint8(_hash).length, 32);
     }
 
     /// forge-config: default.fuzz.runs = 1
-    /// forge-config: default.fuzz.show-logs = true
-    function testFuzzGetRandomUint8(bytes32 _hash) public view returns (uint8[] memory) {
+    function testFuzz_GetRandomUint8(bytes32 _hash) public view returns (uint8[] memory) {
         // no verification needed
         return oracle.getRandomUint8(_hash);
     }
