@@ -2,8 +2,8 @@
 pragma solidity ^0.8.26;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IGame, IOracle, IStation} from "src/Interface.sol";
-import {GameMeta} from "src/logic/Game.sol";
+import {IOracle, IStation} from "src/Interface.sol";
+import {GameMeta, IGame} from "src/logic/Game.sol";
 
 /// @dev 반드시 admin 계정을 통해서만 오라클을 설정하고 실행해야 함
 contract Station {
