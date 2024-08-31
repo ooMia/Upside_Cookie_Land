@@ -44,4 +44,3 @@ interface IStation is IOracle {
 
     function play(uint256 _gameId, uint256 _amount, bytes memory _data) external;
 }
-
