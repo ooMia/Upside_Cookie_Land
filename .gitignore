@@ -9,6 +9,7 @@ out/
 
 # Docs
 docs/
+.gas-snapshot
 
 # Dotenv file
 .env
