@@ -3,11 +3,16 @@ pragma solidity ^0.8.26;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
-import {DoubleEndedQueue} from "@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol";
-import {IGame, IOracle} from "src/Interface.sol";
 
-abstract contract Game is UUPSUpgradeable, Ownable {
-    constructor() Ownable(tx.origin) {}
+interface IGame {
+    /// @dev Play the game with the amount of coin
+    /// @param _amount The amount of coin for the game. The more coin you play, the more reward you get.
+    /// @param _data The data to play the game. Need to be implemented in the game logic.
+    function play(uint256 _amount, bytes calldata _data) external;
+}
+
+abstract contract Game is IGame, UUPSUpgradeable, Ownable {
+    constructor() Ownable(msg.sender) {}
 
     /// @dev Save data for claiming verified snapshots
     struct GameData {
@@ -16,8 +21,10 @@ abstract contract Game is UUPSUpgradeable, Ownable {
         uint256 minTimestamp; // given by station
     }
 
-    function _authorizeUpgrade(address newImplementation) internal virtual override onlyOwner {}
+    function _authorizeUpgrade(address) internal override onlyOwner {}
 }
+
+event GamePlayed(address indexed player, uint256 amount, bytes data);
 
 struct GameMeta {
     uint256 id;
@@ -26,14 +33,3 @@ struct GameMeta {
     uint256 minAmount;
     uint256 maxAmount;
 }
-
-// interface IGame {
-//     /// @dev Mint and deposit the coin for the amount of eth sent
-//     /// @param _minimumAmount The minimum amount of coin to mint. Revert if the amount is less than this.
-//     function mintDepositCoin(uint256 _minimumAmount) external payable;
-
-//     /// @dev Play the game with the amount of coin
-//     /// @param _amount The amount of coin for the game. The more coin you play, the more reward you get.
-//     /// @param _data The data to play the game. Need to be implemented in the game logic.
-//     function play(uint256 _amount, bytes calldata _data) external;
-// }
