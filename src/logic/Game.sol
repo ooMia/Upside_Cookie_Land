@@ -1,23 +1,22 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-import {IGame, IOracle} from "src/Interface.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {DoubleEndedQueue} from "@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol";
+import {IGame, IOracle} from "src/Interface.sol";
 
-abstract contract Game {
-
-    IOracle internal oracle;
-
-    constructor(address _oracle) {
-        oracle = IOracle(_oracle);
-    }
+abstract contract Game is UUPSUpgradeable, Ownable {
+    constructor() Ownable(tx.origin) {}
 
     /// @dev Save data for claiming verified snapshots
     struct GameData {
         uint256 amount; // given by player
-        bytes32 seed; // given by station
         uint256 minBlockNumber; // given by station
+        uint256 minTimestamp; // given by station
     }
+
+    function _authorizeUpgrade(address newImplementation) internal virtual override onlyOwner {}
 }
 
 struct GameMeta {
