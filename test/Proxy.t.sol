@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.26 <0.9.0;
+pragma solidity ^0.8.26;
 
-contract ProxyTest {
-    function setUp() public {}
-}
+import {IStation} from "src/Interface.sol";
+import {StationProxy} from "src/Proxy.sol";
+import {RPS} from "src/logic/RPS.sol";

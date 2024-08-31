@@ -1,6 +1,6 @@
 # v1: components setup
 
-![](https://github.com/user-attachments/assets/2ff5a299-9350-4cf4-b59c-4d0f868a034a)
+![structure](https://github.com/user-attachments/assets/2ff5a299-9350-4cf4-b59c-4d0f868a034a)
 
 1. Proxy
 2. Logic: Station
@@ -16,6 +16,10 @@ v1의 목표는 인터페이스를 구축하고
 각 인터페이스에 대한 상세 구현 설명을 작성하는 것
 
 일단 컴포넌트는 모두 구성함
+
+![work-flow](https://shorturl.at/9tQy0)
+
+1. Game
 
 정산하는 로직 되게 중요함
 일단 사용자가 게임을 신청? 하면 그 스토리지에 저장됨
