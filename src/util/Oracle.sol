@@ -6,23 +6,18 @@ import {IOracle} from "src/Interface.sol";
 /// @title Oracle contract
 /// @dev 사용자로부터 미래에 존재하는 임의의 블록 번호를 부여받고, 해당 블록의 해시값을 이용하여 랜덤 값을 생성하는 컨트랙트
 contract Oracle is IOracle {
-    bytes32 private randomSeed;
-    uint256 nonce;
-
-    modifier statusChange() {
-        ++nonce;
-        _;
-    }
-
-    function setRandomSeed(bytes32 _randomSeed) external override {
-        randomSeed = _randomSeed;
-    }
-
+    // predictable random number
     function getRandomHash() external view override returns (bytes32) {
-        return keccak256(abi.encodePacked(msg.sender, randomSeed));
+        return keccak256(abi.encode(msg.sender, block.timestamp, blockhash(block.number)));
     }
 
-    function getRandomNumbers(bytes32 _hash) external view override returns (uint256[] memory) {
-        // block.difficulty block.prevrandao
+    // must return same value with the same input
+    // this is not an actual random number generator
+    function getRandomUint8(bytes32 _hash) external pure override returns (uint8[] memory) {
+        uint8[] memory res = new uint8[](32);
+        for (uint8 i = 0; i < 32; ++i) {
+            res[i] = uint8(uint256(_hash) >> (i * 8));
+        }
+        return res;
     }
 }
