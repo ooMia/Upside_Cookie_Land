@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
+import {GameMeta} from "src/logic/Game.sol";
+
 /// @title Oracle interface
 /// @dev 임시로 구현된 형태의 오라클 사용을 위한 인터페이스
 interface IOracle {
@@ -14,7 +16,7 @@ interface IOracle {
     function getRandomUint8(bytes32) external pure returns (uint8[] memory);
 }
 
-interface IStation {
+interface IStation is IOracle {
     struct User {
         Coin coin;
         LP lp;
@@ -39,6 +41,12 @@ interface IStation {
     /// @dev Mint and deposit the coin for the amount of eth sent
     /// @param _minimumAmount The minimum amount of coin to mint. Revert if the amount is less than this.
     function mintDepositCoin(uint256 _minimumAmount) external payable;
+
+    function setGame(GameMeta calldata _meta) external;
+
+    function playMulti(bytes[] calldata _data) external;
+
+    function play(uint256 _gameId, uint256 _amount, bytes memory _data) external;
 }
 
 interface IGame {
