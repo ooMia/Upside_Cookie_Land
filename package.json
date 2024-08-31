@@ -1,7 +1,7 @@
 {
-  "name": "upside_practice_project",
+  "name": "@oomia/upside-cookie-land",
   "version": "0.0.1",
-  "description": "upside_practice_project",
+  "description": "Upside Cookie Land",
   "directories": {
     "lib": "lib",
     "test": "test",
@@ -9,9 +9,9 @@
     "proxy": "src/proxy"
   },
   "scripts": {
-    "install": "forge install && forge update && npm run remapping",
+    "install": "yarn install --ignore-scripts && forge install && forge update && yarn run remapping ",
     "test": "npm run format && forge test || forge coverage",
-    "format": "forge fmt",
+    "format": "yarn compile && prettier --write . && forge fmt",
     "build": "forge build",
     "compile": "forge compile",
     "remapping": "forge remappings > remappings.txt",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ooMia/Upside_Practice_Project.git"
+    "url": "git+https://github.com/ooMia/Upside_Cookie_Land.git"
   },
   "keywords": [
     "upside"
@@ -28,7 +28,15 @@
   "author": "ooMia",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/ooMia/Upside_Practice_Project/issues"
+    "url": "https://github.com/ooMia/Upside_Cookie_Land/issues"
   },
-  "homepage": "https://github.com/ooMia/Upside_Practice_Project#readme"
+  "homepage": "https://github.com/ooMia/Upside_Cookie_Land#readme",
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-solidity": "^1.4.1"
+  },
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
