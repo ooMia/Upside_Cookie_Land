@@ -1,7 +1,7 @@
 {
-  "name": "Upside_Cookie_Land",
+  "name": "@oomia/upside-cookie-land",
   "version": "0.0.1",
-  "description": "Upside_Cookie_Land",
+  "description": "Upside Cookie Land",
   "directories": {
     "lib": "lib",
     "test": "test",
