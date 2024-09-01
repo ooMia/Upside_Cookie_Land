@@ -9,7 +9,7 @@ contract Cookie is ERC20 {
     }
 }
 
-abstract contract CookieVendor {
+contract CookieVendor {
     ERC20 public cookie;
 
     mapping(address => uint256) internal CK;
@@ -47,7 +47,7 @@ abstract contract CookieVendor {
         return 100;
     }
 
-    function getcookieBalance() public view returns (uint256) {
+    function getCookieBalance() public view returns (uint256) {
         return CK[msg.sender];
     }
 }
