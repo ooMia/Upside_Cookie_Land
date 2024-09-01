@@ -5,9 +5,11 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Cookie, CookieVendor} from "token/Cookie.sol";
 
-import {GameMeta, IGame} from "logic/Game.sol";
+import {GameMeta, IGame} from "game/Game.sol";
 import {IOracle, Oracle} from "util/Oracle.sol";
 import {IGameProxy} from "util/Proxy.sol";
+
+import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 interface IStation {
     function depositLP(uint256 _amount) external;
@@ -51,7 +53,7 @@ contract LPVendor {
 
 /// @dev 반드시 admin 계정을 통해서만 오라클을 설정하고 실행해야 함
 
-contract Station is CookieVendor, Ownable {
+contract Station is UUPSUpgradeable, CookieVendor, Ownable {
     // stoppable
     IOracle public oracle;
     address internal gameProxy;
@@ -137,4 +139,6 @@ contract Station is CookieVendor, Ownable {
         require(meta.minAmount <= _amount && _amount <= meta.maxAmount, InvalidAmount());
         require(cookie.transferFrom(msg.sender, address(this), _amount), TransferFailed());
     }
+
+    function _authorizeUpgrade(address newImplementation) internal view override onlyOwner {}
 }

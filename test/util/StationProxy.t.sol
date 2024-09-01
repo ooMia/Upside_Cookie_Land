@@ -6,8 +6,8 @@ import "forge-std/Test.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import {RPS} from "logic/RPS.sol";
-import {Station} from "logic/Station.sol";
+import {RPS} from "game/RPS.sol";
+import {Station} from "station/Station.sol";
 import {IOracle, Oracle} from "util/Oracle.sol";
 import {GameProxy, StationProxy} from "util/Proxy.sol";
 

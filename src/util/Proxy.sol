@@ -5,10 +5,26 @@ import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.s
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
-import {GameMeta, IGame} from "logic/Game.sol";
+import {GameMeta, IGame} from "game/Game.sol";
 
-contract StationProxy is ERC1967Proxy {
-    constructor(address _implementation) ERC1967Proxy(_implementation, "") {}
+contract StationProxy is ERC1967Proxy, Pausable, Ownable {
+    constructor(address _implementation) ERC1967Proxy(_implementation, "") Ownable(msg.sender) {}
+
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
+    function implementation() external view returns (address) {
+        return _implementation();
+    }
+
+    receive() external payable {
+        _fallback();
+    }
 }
 
 interface IGameProxy {
@@ -18,7 +34,7 @@ interface IGameProxy {
 }
 
 /// @dev Emergency stoppable
-contract GameProxy is IGameProxy, Pausable, Ownable {
+contract GameProxy is IGameProxy, Ownable {
     mapping(uint256 => GameMeta) internal games;
 
     constructor() Ownable(msg.sender) {}

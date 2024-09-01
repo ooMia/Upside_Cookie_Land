@@ -1,20 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-import {Game, GamePlayed} from "logic/Game.sol";
+import {Game, GamePlayed} from "game/Game.sol";
 import {IOracle} from "util/Oracle.sol";
-
-// /**
-//  * @dev Function that should revert when `msg.sender` is not authorized to upgrade the contract. Called by
-//  * {upgradeToAndCall}.
-//  *
-//  * Normally, this function will use an xref:access.adoc[access control] modifier such as {Ownable-onlyOwner}.
-//  *
-//  * ```solidity
-//  * function _authorizeUpgrade(address) internal onlyOwner {}
-//  * ```
-//  */
-// function _authorizeUpgrade(address newImplementation) internal virtual;
 
 enum Hand {
     Rock,
@@ -30,12 +18,10 @@ struct RPSData {
 contract RPS is Game {
     RPSData[] internal stack;
 
-    function play(uint256 _amount, Hand[] memory _hand) internal {
-        require(_amount > 0 && _hand.length > 0);
-        // use transient: TSTORE and TLOAD
-        // https://soliditylang.org/blog/2024/01/26/transient-storage/
-        stack.push(RPSData(_hand, GameData(_amount, block.number + 4, block.timestamp)));
-        emit GamePlayed(msg.sender, block.number, "RPS");
+    /* --- External Functions --- */
+
+    function play(uint256 _amount, bytes calldata _data) external override {
+        play(_amount, abi.decode(_data, (Hand[])));
     }
 
     function playRandom(uint256 _amount, uint256 _length, bytes32 _seed) external {
@@ -45,6 +31,17 @@ contract RPS is Game {
         } else {
             play(_amount, generateRandomHand(_length, _seed));
         }
+    }
+
+    /* --- Internal Functions --- */
+
+    /// @dev Highly recommend to use transient storage
+    function play(uint256 _amount, Hand[] memory _hand) internal {
+        require(_amount > 0 && _hand.length > 0);
+        // use transient: TSTORE and TLOAD
+        // https://soliditylang.org/blog/2024/01/26/transient-storage/
+        stack.push(RPSData(_hand, GameData(_amount, block.number + 4, block.timestamp)));
+        emit GamePlayed(msg.sender, block.number, "RPS");
     }
 
     function generateRandomHand(uint256 _length, bytes32 _seed) internal pure returns (Hand[] memory hand) {
@@ -57,9 +54,5 @@ contract RPS is Game {
 
     function generateRandomHand(uint256 _length) internal view returns (Hand[] memory) {
         return generateRandomHand(_length, keccak256(abi.encode(stack.length, tx.origin)));
-    }
-
-    function play(uint256 _amount, bytes memory _data) external override {
-        play(_amount, abi.decode(_data, (Hand[])));
     }
 }

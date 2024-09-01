@@ -3,8 +3,8 @@ pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
 
-import {GameMeta, GamePlayed} from "logic/Game.sol";
-import {Hand, RPS} from "logic/RPS.sol";
+import {GameMeta, GamePlayed} from "game/Game.sol";
+import {Hand, RPS} from "game/RPS.sol";
 import {GameProxy} from "util/Proxy.sol";
 
 contract RPSProxyTest is Test {

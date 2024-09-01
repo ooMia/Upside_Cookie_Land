@@ -6,9 +6,9 @@ import "forge-std/Test.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import {GamePlayed} from "logic/Game.sol";
-import {RPS} from "logic/RPS.sol";
-import {IStation, Station} from "logic/Station.sol";
+import {GamePlayed} from "game/Game.sol";
+import {RPS} from "game/RPS.sol";
+import {IStation, Station} from "station/Station.sol";
 import {Cookie, CookieVendor} from "token/Cookie.sol";
 import {IOracle, Oracle} from "util/Oracle.sol";
 import {GameProxy, IGameProxy} from "util/Proxy.sol";
@@ -161,7 +161,7 @@ contract StationTest is Test {
         buyCookie(amount);
         approveCookie(amount);
         // TODO mock으로 결과 강제하기
-        // 현재는 높은 확률로 성공하도록 함
+        // 현재는 낮은 확률로 실패함
         for (uint256 i = 0; i < 77; ++i) {
             playRPS(amount / 77, _id, 1);
         }
