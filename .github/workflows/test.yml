@@ -46,5 +46,5 @@ jobs:
 
       - name: Run coverage
         run: |
-          NO_COLOR=1 forge coverage >> $GITHUB_STEP_SUMMARY
+          NO_COLOR=1 forge coverage --ir-minimum >> $GITHUB_STEP_SUMMARY
         id: coverage
