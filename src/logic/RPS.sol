@@ -31,6 +31,8 @@ contract RPS is Game {
     RPSData[] internal stack;
 
     function play(uint256 _amount, Hand[] memory _hand) internal {
+        // use transient: TSTORE and TLOAD
+        // https://soliditylang.org/blog/2024/01/26/transient-storage/
         stack.push(RPSData(_hand, GameData(_amount, block.number, block.timestamp)));
         emit GamePlayed(msg.sender, _amount, abi.encode(_hand));
     }

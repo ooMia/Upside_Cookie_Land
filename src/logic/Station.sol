@@ -1,18 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {Cookie} from "token/Cookie.sol";
 
 import {GameMeta, IGame} from "logic/Game.sol";
-import {IOracle} from "util/Oracle.sol";
+import {IOracle, Oracle} from "util/Oracle.sol";
 import {IGameProxy} from "util/Proxy.sol";
-
-struct User {
-    uint256 cookie;
-    uint256 LP;
-}
 
 interface IStation {
     function buyCookie(uint256 _amount) external payable;
@@ -31,24 +26,40 @@ interface IStation {
 }
 
 /// @dev 반드시 admin 계정을 통해서만 오라클을 설정하고 실행해야 함
-contract Station is IStation, Ownable {
+contract Station is Ownable {
     // stoppable
-    IERC20 internal cookie;
-    IOracle internal oracle;
-    IGameProxy internal gameProxy;
+    IERC20 public cookie;
+    IOracle public oracle;
+    address internal gameProxy;
+
+    struct User {
+        uint256 CK;
+        uint256 LP;
+    }
 
     mapping(uint256 => GameMeta) internal games;
     mapping(address => User) internal users;
-    uint256 internal jackpot;
 
-    constructor(IOracle _oracle, IERC20 _cookie) Ownable(msg.sender) {
-        oracle = IOracle(_oracle);
-        cookie = IERC20(_cookie);
-        cookie.approve(address(msg.sender), type(uint256).max);
+    // only for initial setup
+    constructor(address _game) Ownable(msg.sender) {
+        oracle = new Oracle();
+        cookie = new Cookie();
+        gameProxy = _game;
+        require(cookie.balanceOf(address(this)) == type(uint256).max);
     }
 
     function buyCookie(uint256 _amount) external payable {
-        IERC20(cookie).transfer(msg.sender, _amount);
+        require(msg.value >= getCookiePrice() * _amount);
+        increaseCookie(_amount);
+        require(cookie.transfer(msg.sender, _amount));
+    }
+
+    function increaseCookie(uint256 _amount) internal {
+        users[msg.sender].CK += _amount;
+    }
+
+    function decreaseCookie(uint256 _amount) internal {
+        users[msg.sender].CK -= _amount;
     }
 
     function sellCookie(uint256 _amount) external {
@@ -59,8 +70,12 @@ contract Station is IStation, Ownable {
         // TODO : implement
     }
 
-    function getcookieBalance() external view returns (uint256) {
-        return users[msg.sender].cookie;
+    function getCookiePrice() public pure returns (uint256) {
+        return 100;
+    }
+
+    function getcookieBalance() public view returns (uint256) {
+        return users[msg.sender].CK;
     }
 
     function getLPBalance() external view returns (uint256) {

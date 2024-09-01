@@ -3,23 +3,23 @@ pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
 
+import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {MockERC20} from "forge-std/mocks/MockERC20.sol";
 
 import {RPS} from "logic/RPS.sol";
 import {Station} from "logic/Station.sol";
-import {Oracle} from "util/Oracle.sol";
+import {IOracle, Oracle} from "util/Oracle.sol";
 import {GameProxy, StationProxy} from "util/Proxy.sol";
 
-contract StationTest is Test {
-    StationProxy station;
-    GameProxy game;
-    MockERC20 mock = new MockERC20();
+// contract StationTest is Test {
+//     StationProxy station;
+//     GameProxy game;
+//     IERC20 cookie = new ERC20Mock();
 
-    function setUp() public {
-        mock.initialize("Cookie", "CK", 18);
-        Station _station = new Station(new Oracle(), IERC20(address(mock)));
-        station = new StationProxy(address(_station));
-        game = new GameProxy();
-    }
-}
+//     function setUp() public {
+//         IOracle oracle = new Oracle();
+//         Station _station = new Station(oracle, cookie);
+//         station = new StationProxy(address(_station));
+//         game = new GameProxy();
+//     }
+// }
