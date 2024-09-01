@@ -3,6 +3,8 @@ pragma solidity ^0.8.26;
 
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 import {GameMeta, IGame} from "logic/Game.sol";
 
 contract StationProxy is ERC1967Proxy {
@@ -15,11 +17,13 @@ interface IGameProxy {
     function play(uint256 _gameId, uint256 _amount, bytes calldata _data) external;
 }
 
-contract GameProxy {
+/// @dev Emergency stoppable
+contract GameProxy is IGameProxy, Pausable, Ownable {
     mapping(uint256 => GameMeta) internal games;
 
-    function setGame(GameMeta calldata _meta) external {
-        // only owner
+    constructor() Ownable(msg.sender) {}
+
+    function setGame(GameMeta calldata _meta) external onlyOwner {
         games[_meta.id] = _meta;
     }
 
