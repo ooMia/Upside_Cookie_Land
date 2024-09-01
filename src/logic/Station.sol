@@ -37,7 +37,8 @@ contract Station is CookieVendor, Ownable {
     }
 
     mapping(uint256 => GameMeta) internal games;
-    mapping(address => User) internal users;
+
+    error InvalidAmount();
 
     // only for initial setup
     constructor(address _game) Ownable(msg.sender) {
@@ -87,5 +88,20 @@ contract Station is CookieVendor, Ownable {
         GameMeta storage meta = games[_gameId];
         (bool res,) = meta.logic.delegatecall(abi.encodeWithSelector(IGame.play.selector, _amount, _data));
         require(res);
+    }
+
+    /* --- Internal Functions --- */
+
+    function createGameMeta(uint256 _id, address _logic, uint256 _version, uint256 _minAmount, uint256 _maxAmount)
+        internal
+        pure
+        returns (GameMeta memory)
+    {
+        return GameMeta(_id, _logic, _version, _minAmount, _maxAmount);
+    }
+
+    function authorizePlay(GameMeta storage meta, uint256 _amount) internal {
+        require(meta.minAmount <= _amount && _amount <= meta.maxAmount, InvalidAmount());
+        require(cookie.transferFrom(msg.sender, address(this), _amount), TransferFailed());
     }
 }

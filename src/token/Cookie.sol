@@ -3,8 +3,10 @@ pragma solidity ^0.8.26;
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Cookie is ERC20 {
-    constructor() ERC20("Cookie", "CKE") {
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+
+contract Cookie is ERC20, Ownable {
+    constructor() ERC20("Cookie", "CKE") Ownable(msg.sender) {
         _mint(msg.sender, type(uint256).max);
     }
 }
@@ -18,17 +20,20 @@ contract CookieVendor {
         cookie = new Cookie();
     }
 
+    error InsufficientFunds();
+    error TransferFailed();
+
     /// @dev Check-Efect-Interaction
-    function buyCookie(uint256 _amount) external payable {
-        require(msg.value >= getCookiePrice() * _amount);
+    function buyCookie(uint256 _amount) public payable {
+        require(msg.value >= getCookiePrice() * _amount, InsufficientFunds());
         increaseCookie(_amount);
-        require(cookie.transfer(msg.sender, _amount));
+        require(cookie.transfer(msg.sender, _amount), TransferFailed());
     }
 
     /// @dev Check-Efect-Interaction
-    function sellCookie(uint256 _amount) external {
+    function sellCookie(uint256 _amount) public {
         decreaseCookie(_amount);
-        require(cookie.transferFrom(msg.sender, address(this), _amount));
+        require(cookie.transferFrom(msg.sender, address(this), _amount), TransferFailed());
         (bool res,) = msg.sender.call{value: getCookiePrice() * _amount}("");
         require(res);
     }
