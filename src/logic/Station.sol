@@ -3,7 +3,7 @@ pragma solidity ^0.8.26;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {Cookie} from "token/Cookie.sol";
+import {Cookie, CookieVendor} from "token/Cookie.sol";
 
 import {GameMeta, IGame} from "logic/Game.sol";
 import {IOracle, Oracle} from "util/Oracle.sol";
@@ -26,9 +26,8 @@ interface IStation {
 }
 
 /// @dev 반드시 admin 계정을 통해서만 오라클을 설정하고 실행해야 함
-contract Station is Ownable {
+contract Station is CookieVendor, Ownable {
     // stoppable
-    IERC20 public cookie;
     IOracle public oracle;
     address internal gameProxy;
 
@@ -43,39 +42,12 @@ contract Station is Ownable {
     // only for initial setup
     constructor(address _game) Ownable(msg.sender) {
         oracle = new Oracle();
-        cookie = new Cookie();
         gameProxy = _game;
         require(cookie.balanceOf(address(this)) == type(uint256).max);
     }
 
-    function buyCookie(uint256 _amount) external payable {
-        require(msg.value >= getCookiePrice() * _amount);
-        increaseCookie(_amount);
-        require(cookie.transfer(msg.sender, _amount));
-    }
-
-    function increaseCookie(uint256 _amount) internal {
-        users[msg.sender].CK += _amount;
-    }
-
-    function decreaseCookie(uint256 _amount) internal {
-        users[msg.sender].CK -= _amount;
-    }
-
-    function sellCookie(uint256 _amount) external {
-        // TODO : implement
-    }
-
     function mintDepositCookie(uint256 _minimumAmount) external payable {
         // TODO : implement
-    }
-
-    function getCookiePrice() public pure returns (uint256) {
-        return 100;
-    }
-
-    function getcookieBalance() public view returns (uint256) {
-        return users[msg.sender].CK;
     }
 
     function getLPBalance() external view returns (uint256) {

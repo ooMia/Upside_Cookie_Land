@@ -48,12 +48,12 @@ contract OracleTest is Test {
     /* --- Random Uint8 --- */
 
     /// forge-config: default.fuzz.runs = 1
-    function testFuzz_RandomUintLength32(bytes32 _hash) public view {
+    function test_RandomUintLength32(bytes32 _hash) public view {
         assertEq(oracle.getRandomUint8(_hash).length, 32);
     }
 
     /// forge-config: default.fuzz.runs = 1
-    function testFuzz_GetRandomUint8(bytes32 _hash) public view returns (uint8[] memory) {
+    function test_GetRandomUint8(bytes32 _hash) public view returns (uint8[] memory) {
         // no verification needed
         return oracle.getRandomUint8(_hash);
     }

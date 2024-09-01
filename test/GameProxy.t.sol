@@ -21,13 +21,13 @@ contract RPSProxyTest is Test {
         hands.push(Hand.Scissors);
     }
 
-    function testPlay() public {
+    function test_play() public {
         vm.expectEmit(true, true, true, false, address(rps));
         emit GamePlayed(address(this), 100, abi.encode(hands));
         rps.play(100, abi.encode(hands));
     }
 
-    function testCallPlayViaProxy() public {
+    function test_play_callViaProxy() public {
         vm.expectEmit(true, true, true, false, address(gameProxy));
         emit GamePlayed(address(this), 100, abi.encode(hands));
         (bool res,) =
