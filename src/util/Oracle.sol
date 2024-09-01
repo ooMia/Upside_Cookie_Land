@@ -9,9 +9,11 @@ interface IOracle {
 
     /// @dev Get the random hash by msg.sender and its seed
     function getRandomHash() external view returns (bytes32);
+    function getRandomHash(uint256) external view returns (bytes32);
 
     /// @dev Get random numbers by given hash
     function getRandomUint8(bytes32) external pure returns (uint8[] memory);
+    function getRandomUint8WithBlockNumber(uint256) external view returns (uint8[] memory);
 }
 
 /// @title Oracle contract
@@ -19,17 +21,25 @@ interface IOracle {
 contract Oracle is IOracle {
     // predictable random number
     function getRandomHash() external view override returns (bytes32) {
-        return keccak256(abi.encode(msg.sender, block.timestamp, blockhash(block.number)));
+        return getRandomHash(block.number);
+    }
+
+    function getRandomHash(uint256 _blockNumber) public view override returns (bytes32) {
+        return keccak256(abi.encode(msg.sender, block.timestamp, blockhash(_blockNumber)));
     }
 
     // must return same value with the same input
     // this is not an actual random number generator
-    function getRandomUint8(bytes32 _hash) external pure override returns (uint8[] memory) {
+    function getRandomUint8(bytes32 _hash) public pure override returns (uint8[] memory) {
         _hash = keccak256(abi.encode(_hash));
         uint8[] memory res = new uint8[](32);
         for (uint8 i = 0; i < 32; ++i) {
             res[i] = uint8(uint256(_hash) >> (i * 8));
         }
         return res;
+    }
+
+    function getRandomUint8WithBlockNumber(uint256 _blockNumber) external view override returns (uint8[] memory) {
+        return getRandomUint8(getRandomHash(_blockNumber));
     }
 }

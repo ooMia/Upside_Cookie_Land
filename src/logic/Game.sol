@@ -9,6 +9,8 @@ interface IGame {
     /// @param _amount The amount of coin for the game. The more coin you play, the more reward you get.
     /// @param _data The data to play the game. Need to be implemented in the game logic.
     function play(uint256 _amount, bytes calldata _data) external;
+
+    function playRandom(uint256 _amount, uint256 _length, bytes32 _seed) external;
 }
 
 abstract contract Game is IGame, UUPSUpgradeable, Ownable {
@@ -17,14 +19,14 @@ abstract contract Game is IGame, UUPSUpgradeable, Ownable {
     /// @dev Save data for claiming verified snapshots
     struct GameData {
         uint256 amount; // given by player
-        uint256 minBlockNumber; // given by station
         uint256 minTimestamp; // given by station
+        uint256 targetHashBlockNumber; // given by station
     }
 
     function _authorizeUpgrade(address) internal override onlyOwner {}
 }
 
-event GamePlayed(address indexed player, uint256 amount, bytes data);
+event GamePlayed(address indexed player, uint256 blockNumber, string gameName);
 
 struct GameMeta {
     uint256 id;

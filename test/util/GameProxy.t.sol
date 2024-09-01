@@ -23,15 +23,20 @@ contract RPSProxyTest is Test {
 
     function test_play() public {
         vm.expectEmit(true, true, true, false, address(rps));
-        emit GamePlayed(address(this), 100, abi.encode(hands));
+        emit GamePlayed(address(this), block.number, "RPS");
         rps.play(100, abi.encode(hands));
     }
 
     function test_play_callViaProxy() public {
         vm.expectEmit(true, true, true, false, address(gameProxy));
-        emit GamePlayed(address(this), 100, abi.encode(hands));
+        emit GamePlayed(address(this), block.number, "RPS");
         (bool res,) =
             address(gameProxy).call(abi.encodeWithSelector(GameProxy.play.selector, 0, 100, abi.encode(hands)));
         assertTrue(res);
+    }
+
+    function testFail_setGame_notOwner() public {
+        vm.prank(vm.randomAddress());
+        gameProxy.setGame(GameMeta(1, address(rps), 0, 100, 1000));
     }
 }
