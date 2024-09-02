@@ -7,11 +7,11 @@ import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {GamePlayed} from "game/Game.sol";
+import {GameProxy, IGameProxy} from "game/GameProxy.sol";
 import {RPS} from "game/RPS.sol";
-import {IStation, Station} from "station/Station.sol";
+import {Station} from "station/Station.sol";
 import {Cookie, CookieVendor} from "token/Cookie.sol";
 import {IOracle, Oracle} from "util/Oracle.sol";
-import {GameProxy, IGameProxy} from "util/Proxy.sol";
 
 contract StationTest is Test {
     Station station;
@@ -93,12 +93,12 @@ contract StationTest is Test {
     /* --- Claim --- */
 
     function claim() public {
-        (bool res,) = address(station).call(abi.encodeWithSignature("claim()"));
-        require(res);
+        station.claim();
     }
 
     function claim_asIs() internal view {
         assertEq(cookie.balanceOf(address(msg.sender)), 0);
+        assertNotEq(station.getGameMeta(0).logic, address(0));
     }
 
     function claim_toBe() internal view {

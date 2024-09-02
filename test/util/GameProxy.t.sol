@@ -3,9 +3,10 @@ pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
 
-import {GameMeta, GamePlayed} from "game/Game.sol";
+import {GamePlayed} from "game/Game.sol";
+
+import {GameProxy, IGameProxy} from "game/GameProxy.sol";
 import {Hand, RPS} from "game/RPS.sol";
-import {GameProxy} from "util/Proxy.sol";
 
 contract RPSProxyTest is Test {
     RPS rps;
@@ -15,7 +16,7 @@ contract RPSProxyTest is Test {
     function setUp() public {
         rps = new RPS();
         gameProxy = new GameProxy();
-        gameProxy.setGame(GameMeta(0, address(rps), 0, 100, 1000));
+        gameProxy.setGame(IGameProxy.GameMeta(0, address(rps), 0, 100, 1000));
         hands.push(Hand.Rock);
         hands.push(Hand.Paper);
         hands.push(Hand.Scissors);
@@ -37,6 +38,6 @@ contract RPSProxyTest is Test {
 
     function testFail_setGame_notOwner() public {
         vm.prank(vm.randomAddress());
-        gameProxy.setGame(GameMeta(1, address(rps), 0, 100, 1000));
+        gameProxy.setGame(IGameProxy.GameMeta(1, address(rps), 0, 100, 1000));
     }
 }

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+ // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
@@ -11,6 +11,8 @@ interface IGame {
     function play(uint256 _amount, bytes calldata _data) external;
 
     function playRandom(uint256 _amount, uint256 _length, bytes32 _seed) external;
+
+    function claim() external returns (uint256);
 }
 
 abstract contract Game is IGame, UUPSUpgradeable, Ownable {
@@ -27,11 +29,3 @@ abstract contract Game is IGame, UUPSUpgradeable, Ownable {
 }
 
 event GamePlayed(address indexed player, uint256 blockNumber, string gameName);
-
-struct GameMeta {
-    uint256 id;
-    address logic;
-    uint256 version;
-    uint256 minAmount;
-    uint256 maxAmount;
-}

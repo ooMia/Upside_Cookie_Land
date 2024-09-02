@@ -5,8 +5,8 @@ import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.s
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
-import {GameMeta, IGame} from "game/Game.sol";
 
+/// @dev Emergency stoppable
 contract StationProxy is ERC1967Proxy, Pausable, Ownable {
     constructor(address _implementation) ERC1967Proxy(_implementation, "") Ownable(msg.sender) {}
 
@@ -24,27 +24,5 @@ contract StationProxy is ERC1967Proxy, Pausable, Ownable {
 
     receive() external payable {
         _fallback();
-    }
-}
-
-interface IGameProxy {
-    function setGame(GameMeta calldata _meta) external;
-
-    function play(uint256 _gameId, uint256 _amount, bytes calldata _data) external;
-}
-
-/// @dev Emergency stoppable
-contract GameProxy is IGameProxy, Ownable {
-    mapping(uint256 => GameMeta) internal games;
-
-    constructor() Ownable(msg.sender) {}
-
-    function setGame(GameMeta calldata _meta) external onlyOwner {
-        games[_meta.id] = _meta;
-    }
-
-    function play(uint256 _gameId, uint256 _amount, bytes memory _data) public {
-        (bool res,) = games[_gameId].logic.delegatecall(abi.encodeWithSelector(IGame.play.selector, _amount, _data));
-        require(res);
     }
 }

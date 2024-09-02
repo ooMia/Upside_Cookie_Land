@@ -16,7 +16,7 @@ struct RPSData {
 }
 
 contract RPS is Game {
-    RPSData[] internal stack;
+    mapping(address => RPSData[]) internal playerStack;
 
     /* --- External Functions --- */
 
@@ -33,6 +33,14 @@ contract RPS is Game {
         }
     }
 
+    function claim() external pure override returns (uint256) {
+        // RPSData memory data = stack.pop();
+        // require(data.gameData.minTimestamp <= block.timestamp && block.number <= data.gameData.targetHashBlockNumber);
+        // uint256 reward = data.gameData.amount;
+        // emit GamePlayed(msg.sender, block.number, "RPS");
+        return 100;
+    }
+
     /* --- Internal Functions --- */
 
     /// @dev Highly recommend to use transient storage
@@ -40,7 +48,7 @@ contract RPS is Game {
         require(_amount > 0 && _hand.length > 0);
         // use transient: TSTORE and TLOAD
         // https://soliditylang.org/blog/2024/01/26/transient-storage/
-        stack.push(RPSData(_hand, GameData(_amount, block.number + 4, block.timestamp)));
+        playerStack[msg.sender].push(RPSData(_hand, GameData(_amount, block.number + 4, block.timestamp)));
         emit GamePlayed(msg.sender, block.number, "RPS");
     }
 
@@ -53,6 +61,6 @@ contract RPS is Game {
     }
 
     function generateRandomHand(uint256 _length) internal view returns (Hand[] memory) {
-        return generateRandomHand(_length, keccak256(abi.encode(stack.length, tx.origin)));
+        return generateRandomHand(_length, keccak256(abi.encode(playerStack[msg.sender].length, tx.origin)));
     }
 }
