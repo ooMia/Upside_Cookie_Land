@@ -4,6 +4,10 @@ pragma solidity ^0.8.26;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
+
 interface IGame {
     /// @dev Play the game with the amount of coin
     /// @param _amount The amount of coin for the game. The more coin you play, the more reward you get.
@@ -29,3 +33,23 @@ abstract contract Game is IGame, UUPSUpgradeable, Ownable {
 }
 
 event GamePlayed(address indexed player, uint256 blockNumber, string gameName);
+
+contract GameProxy is ERC1967Proxy, Pausable, Ownable {
+    constructor(address _implementation) ERC1967Proxy(_implementation, "") Ownable(msg.sender) {}
+
+    function pause() external onlyOwner {
+        _pause();
+    }
+
+    function unpause() external onlyOwner {
+        _unpause();
+    }
+
+    function implementation() external view returns (address) {
+        return _implementation();
+    }
+
+    receive() external payable {
+        _fallback();
+    }
+}
