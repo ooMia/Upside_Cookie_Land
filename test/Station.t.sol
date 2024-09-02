@@ -9,9 +9,10 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {GamePlayed} from "game/Game.sol";
 import {GameManager, IGameManager} from "game/GameManager.sol";
 import {RPS} from "game/RPS.sol";
+
+import {Cookie, CookieVendor} from "station/Cookie.sol";
+import {IOracle, Oracle} from "station/Oracle.sol";
 import {Station} from "station/Station.sol";
-import {Cookie, CookieVendor} from "token/Cookie.sol";
-import {IOracle, Oracle} from "util/Oracle.sol";
 
 contract StationTest is Test {
     Station station;

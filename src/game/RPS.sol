@@ -2,7 +2,7 @@
 pragma solidity ^0.8.26;
 
 import {Game, GamePlayed} from "game/Game.sol";
-import {IOracle} from "util/Oracle.sol";
+import {IOracle} from "station/Oracle.sol";
 
 enum Hand {
     Rock,

@@ -3,11 +3,11 @@ pragma solidity ^0.8.26;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {Cookie, CookieVendor} from "token/Cookie.sol";
+import {Cookie, CookieVendor} from "station/Cookie.sol";
 
 import {IGame} from "game/Game.sol";
 import {GameManager, IGameManager} from "game/GameManager.sol";
-import {IOracle, Oracle} from "util/Oracle.sol";
+import {IOracle, Oracle} from "station/Oracle.sol";
 
 import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
