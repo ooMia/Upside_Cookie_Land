@@ -30,6 +30,7 @@ contract Oracle is IOracle {
 
     // must return same value with the same input
     // this is not an actual random number generator
+
     function getRandomUint8(bytes32 _hash) public pure override returns (uint8[] memory) {
         _hash = keccak256(abi.encode(_hash));
         uint8[] memory res = new uint8[](32);
