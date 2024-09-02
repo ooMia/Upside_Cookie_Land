@@ -15,6 +15,10 @@ contract GameRPS {
     bytes1 constant ROCK = bytes1(uint8(Hand.Rock));
     bytes1 constant PAPER = bytes1(uint8(Hand.Paper));
     bytes1 constant SCISSORS = bytes1(uint8(Hand.Scissors));
+    bytes1 constant RRRR = bytes1(abi.encodePacked(ROCK, ROCK, ROCK, ROCK));
+    bytes1 constant PPPP = bytes1(abi.encodePacked(PAPER, PAPER, PAPER, PAPER));
+    bytes1 constant SSSS = bytes1(abi.encodePacked(SCISSORS, SCISSORS, SCISSORS, SCISSORS));
+
 
     event GamePlayed(address indexed player, uint256 indexed gameId, uint256 targetBlock, uint256 timestamp);
 
@@ -34,7 +38,6 @@ contract GameRPS {
     //     uint256 minBlock = block.number - 256;
     //     uint256 reward = 0;
     //     uint256 idx = 0;
-
     //     payable(msg.sender).transfer(reward);
     // }
 
@@ -43,6 +46,7 @@ contract GameRPS {
         pure
         returns (uint256 multiplier)
     {
+        require(_len > 0, "GameRPS: calculateMultiplier: _len > 0");
         _len %= 32;
         multiplier = 1;
         for (uint8 i = 0; i < _len; ++i) {
@@ -71,15 +75,30 @@ contract GameRPS {
 }
 
 contract TestGameRPS is GameRPS, Test {
-    function test_rule() public {
-        rule(ROCK, SCISSORS);
+    function test_rule() public pure {
+        assert (rule(ROCK, ROCK) == 1);
+        assert (rule(PAPER, PAPER) == 1);
+        assert (rule(SCISSORS, SCISSORS) == 1);
+
+        assert (rule(ROCK, PAPER) == 0);
+        assert (rule(ROCK, SCISSORS) == 2);
+
+        assert (rule(PAPER, SCISSORS) == 0);
+        assert (rule(PAPER, ROCK) == 2);
+
+        assert (rule(SCISSORS, ROCK) == 0);
+        assert (rule(SCISSORS, PAPER) == 2);
     }
 
-    function test_claimReward() public {
-        claimReward();
-    }
+    function test_claimReward() public {}
 
-    function test_calculateMultiplier() public {
-        calculateMultiplier(1, ROCK, SCISSORS);
+    function test_calculateMultiplier() public pure {
+        assert (calculateMultiplier(1, ROCK, ROCK) == 1);
+        assert (calculateMultiplier(1, ROCK, PAPER) == 0);
+        assert (calculateMultiplier(1, ROCK, SCISSORS) == 2);
+
+        assert (calculateMultiplier(4, RRRR, RRRR) == 1);
+        assert (calculateMultiplier(4, RRRR, PPPP) == 0);
+        assert (calculateMultiplier(4, RRRR, SSSS) == 16);
     }
 }

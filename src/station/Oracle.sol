@@ -1,5 +1,5 @@
-// // SPDX-License-Identifier: UNLICENSED
-// pragma solidity ^0.8.26;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.26;
 
 // /// @title Oracle interface
 // /// @dev 임시로 구현된 형태의 오라클 사용을 위한 인터페이스

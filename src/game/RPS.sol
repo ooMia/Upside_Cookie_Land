@@ -1,5 +1,5 @@
-// // SPDX-License-Identifier: UNLICENSED
-// pragma solidity ^0.8.26;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.26;
 
 // import {Game, GamePlayed} from "game/Game.sol";
 // import {IOracle} from "station/Oracle.sol";
