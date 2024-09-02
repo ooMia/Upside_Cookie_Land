@@ -29,9 +29,7 @@ contract GameProxy is IGameProxy, Ownable {
     uint256 nGames;
     mapping(uint256 => GameMeta) public games;
 
-
-    constructor() Ownable(msg.sender) {
-    }
+    constructor() Ownable(msg.sender) {}
 
     function getGameMeta(uint256 _id) public view returns (GameMeta memory) {
         return games[_id];
