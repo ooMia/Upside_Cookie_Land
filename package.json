@@ -1,6 +1,6 @@
 {
   "name": "@oomia/upside-cookie-land",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Upside Cookie Land",
   "directories": {
     "lib": "lib",
@@ -10,7 +10,7 @@
   },
   "scripts": {
     "install": "yarn install --ignore-scripts && forge install && forge update && yarn run remapping ",
-    "test": "npm run format && forge test || forge coverage",
+    "test": "npm run format && forge coverage --ir-minimum",
     "format": "yarn compile && prettier --write . && forge fmt",
     "build": "forge build",
     "compile": "forge compile",
