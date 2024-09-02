@@ -23,6 +23,7 @@ contract StationTest is Test {
         station = new Station(address(game));
         cookie = station.cookie();
         oracle = station.oracle();
+        game.transferOwnership(address(station));
         setRPS(100, 10000);
         startHoax(msg.sender);
     }
