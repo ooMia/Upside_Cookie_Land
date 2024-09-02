@@ -7,7 +7,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 import {IGame} from "game/Game.sol";
 
-interface IGameProxy {
+interface IGameManager {
     function setGame(GameMeta calldata _meta) external;
 
     function play(uint256 _gameId, uint256 _amount, bytes calldata _data) external;
@@ -25,7 +25,7 @@ interface IGameProxy {
     function getGameMeta(uint256 _id) external view returns (GameMeta calldata);
 }
 
-contract GameProxy is IGameProxy, Ownable {
+contract GameManager is IGameManager, Ownable {
     uint256 nGames;
     mapping(uint256 => GameMeta) public games;
 
@@ -50,9 +50,9 @@ contract GameProxy is IGameProxy, Ownable {
     /// @dev Refactoring required
     function claim() external returns (uint256) {
         address game = games[0].logic;
-        require(game != address(0), "GameProxy: NoGame");
+        require(game != address(0), "GameManager: NoGame");
         (bool res, bytes memory reward) = game.delegatecall(abi.encodeWithSelector(IGame.claim.selector));
-        require(res, "GameProxy: ClaimFailed");
+        require(res, "GameManager: ClaimFailed");
         return abi.decode(reward, (uint256));
     }
 }

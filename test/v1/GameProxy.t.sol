@@ -5,18 +5,18 @@ import "forge-std/Test.sol";
 
 import {GamePlayed} from "game/Game.sol";
 
-import {GameProxy, IGameProxy} from "game/GameProxy.sol";
+import {GameManager, IGameManager} from "game/GameManager.sol";
 import {Hand, RPS} from "game/RPS.sol";
 
 contract RPSProxyTest is Test {
     RPS rps;
-    GameProxy gameProxy;
+    GameManager gm;
     Hand[] hands;
 
     function setUp() public {
         rps = new RPS();
-        gameProxy = new GameProxy();
-        gameProxy.setGame(IGameProxy.GameMeta(0, address(rps), 0, 100, 1000));
+        gm = new GameManager();
+        gm.setGame(IGameManager.GameMeta(0, address(rps), 0, 100, 1000));
         hands.push(Hand.Rock);
         hands.push(Hand.Paper);
         hands.push(Hand.Scissors);
@@ -29,15 +29,14 @@ contract RPSProxyTest is Test {
     }
 
     function test_play_callViaProxy() public {
-        vm.expectEmit(true, true, true, false, address(gameProxy));
+        vm.expectEmit(true, true, true, false, address(gm));
         emit GamePlayed(address(this), block.number, "RPS");
-        (bool res,) =
-            address(gameProxy).call(abi.encodeWithSelector(GameProxy.play.selector, 0, 100, abi.encode(hands)));
+        (bool res,) = address(gm).call(abi.encodeWithSelector(GameManager.play.selector, 0, 100, abi.encode(hands)));
         assertTrue(res);
     }
 
     function testFail_setGame_notOwner() public {
         vm.prank(vm.randomAddress());
-        gameProxy.setGame(IGameProxy.GameMeta(1, address(rps), 0, 100, 1000));
+        gm.setGame(IGameManager.GameMeta(1, address(rps), 0, 100, 1000));
     }
 }

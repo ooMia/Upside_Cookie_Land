@@ -6,7 +6,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Cookie, CookieVendor} from "token/Cookie.sol";
 
 import {IGame} from "game/Game.sol";
-import {GameProxy, IGameProxy} from "game/GameProxy.sol";
+import {GameManager, IGameManager} from "game/GameManager.sol";
 import {IOracle, Oracle} from "util/Oracle.sol";
 
 import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
@@ -23,36 +23,36 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeab
 contract Station is UUPSUpgradeable, CookieVendor, Ownable {
     // stoppable
     IOracle public oracle;
-    GameProxy internal gameProxy;
+    GameManager internal gm;
 
     error InvalidAmount();
 
     // only for initial setup
     constructor(address _game) Ownable(msg.sender) {
         oracle = new Oracle();
-        gameProxy = GameProxy(_game);
+        gm = GameManager(_game);
         require(cookie.balanceOf(address(this)) == type(uint256).max);
     }
 
     /* --- External Functions --- */
 
-    function getGameMeta(uint256 _id) public view returns (IGameProxy.GameMeta memory) {
-        return gameProxy.getGameMeta(_id);
+    function getGameMeta(uint256 _id) public view returns (IGameManager.GameMeta memory) {
+        return gm.getGameMeta(_id);
     }
 
-    function setGame(IGameProxy.GameMeta calldata _meta) public onlyOwner {
-        gameProxy.setGame(_meta);
+    function setGame(IGameManager.GameMeta calldata _meta) public onlyOwner {
+        gm.setGame(_meta);
     }
 
     function setGame(uint256 _id, address _logic, uint256 _version, uint256 _minAmount, uint256 _maxAmount)
         external
         onlyOwner
     {
-        gameProxy.setGame(createGameMeta(_id, _logic, _version, _minAmount, _maxAmount));
+        gm.setGame(createGameMeta(_id, _logic, _version, _minAmount, _maxAmount));
     }
 
     function claim() external {
-        uint256 reward = gameProxy.claim();
+        uint256 reward = gm.claim();
         require(reward > 0 && cookie.transfer(msg.sender, reward), "Station: ClaimFailed");
     }
 
@@ -70,7 +70,7 @@ contract Station is UUPSUpgradeable, CookieVendor, Ownable {
     /* --- Public Functions --- */
 
     function playRandom(uint256 _gameId, uint256 _amount, uint256 _length, bytes32 _seed) public {
-        IGameProxy.GameMeta memory meta = gameProxy.getGameMeta(_gameId);
+        IGameManager.GameMeta memory meta = gm.getGameMeta(_gameId);
         authorizePlay(meta, _amount);
         bytes memory data = abi.encodeWithSelector(IGame.playRandom.selector, _amount, _length);
         if (_seed != 0) {
@@ -81,7 +81,7 @@ contract Station is UUPSUpgradeable, CookieVendor, Ownable {
     }
 
     function play(uint256 _gameId, uint256 _amount, bytes memory _data) public {
-        IGameProxy.GameMeta memory meta = gameProxy.getGameMeta(_gameId);
+        IGameManager.GameMeta memory meta = gm.getGameMeta(_gameId);
         authorizePlay(meta, _amount);
         (bool res,) = meta.logic.delegatecall(abi.encodeWithSelector(IGame.play.selector, _amount, _data));
         require(res);
@@ -92,12 +92,12 @@ contract Station is UUPSUpgradeable, CookieVendor, Ownable {
     function createGameMeta(uint256 _id, address _logic, uint256 _version, uint256 _minAmount, uint256 _maxAmount)
         internal
         pure
-        returns (IGameProxy.GameMeta memory)
+        returns (IGameManager.GameMeta memory)
     {
-        return IGameProxy.GameMeta(_id, _logic, _version, _minAmount, _maxAmount);
+        return IGameManager.GameMeta(_id, _logic, _version, _minAmount, _maxAmount);
     }
 
-    function authorizePlay(IGameProxy.GameMeta memory meta, uint256 _amount) internal {
+    function authorizePlay(IGameManager.GameMeta memory meta, uint256 _amount) internal {
         require(meta.minAmount <= _amount && _amount <= meta.maxAmount, InvalidAmount());
         require(cookie.transferFrom(msg.sender, address(this), _amount), TransferFailed());
     }

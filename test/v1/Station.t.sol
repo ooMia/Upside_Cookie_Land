@@ -7,7 +7,7 @@ import {ERC20Mock} from "@openzeppelin/contracts/mocks/token/ERC20Mock.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {GamePlayed} from "game/Game.sol";
-import {GameProxy, IGameProxy} from "game/GameProxy.sol";
+import {GameManager, IGameManager} from "game/GameManager.sol";
 import {RPS} from "game/RPS.sol";
 import {Station} from "station/Station.sol";
 import {Cookie, CookieVendor} from "token/Cookie.sol";
@@ -19,11 +19,11 @@ contract StationTest is Test {
     IOracle oracle;
 
     function setUp() external {
-        GameProxy game = new GameProxy();
-        station = new Station(address(game));
+        GameManager gm = new GameManager();
+        station = new Station(address(gm));
         cookie = station.cookie();
         oracle = station.oracle();
-        game.transferOwnership(address(station));
+        gm.transferOwnership(address(station));
         setRPS(100, 10000);
         startHoax(msg.sender);
     }
