@@ -24,14 +24,12 @@ contract CookieVendor {
     error InsufficientFunds();
     error TransferFailed();
 
-    /// @dev Check-Efect-Interaction
     function buyCookie(uint256 _amount) public payable {
         require(msg.value >= getCookiePrice() * _amount, "InsufficientFunds");
         increaseCookie(_amount);
         require(cookie.transfer(msg.sender, _amount), "TransferFailed");
     }
 
-    /// @dev Check-Efect-Interaction
     function sellCookie(uint256 _amount) public {
         decreaseCookie(_amount);
         require(cookie.transferFrom(msg.sender, address(this), _amount), "TransferFailed");
@@ -96,7 +94,7 @@ contract CookieStation is CookieVendor, Ownable, Pausable, Multicall {
     uint256 gameCount;
     mapping(address => uint256) public rewards;
 
-    function setGame(uint256 _gameId, address _game, uint256 _minAmount, uint256 _maxAmount) external {
+    function setGame(uint256 _gameId, address _game, uint256 _minAmount, uint256 _maxAmount) external onlyOwner {
         require(games[_gameId].logic == address(0), "Game Already Exists");
         require(_game != address(0), "Invalid Game Address");
         require(_minAmount > 0, "Invalid Min Amount");

@@ -15,14 +15,6 @@ contract UpgradeableGameRPS is UUPSUpgradeable, OwnableUpgradeable, GameRPS {
     }
 
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
-
-    function play(address _player, uint256 _amount, bytes1[] memory _hands) public override onlyProxy {
-        super.play(_player, _amount, _hands);
-    }
-
-    function play(address _player, uint256 _amount, bytes32 _hands, uint8 _streak) public override onlyProxy {
-        super.play(_player, _amount, _hands, _streak);
-    }
 }
 
 contract GameProxy is ERC1967Proxy {

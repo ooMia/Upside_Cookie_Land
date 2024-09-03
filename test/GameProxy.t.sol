@@ -2,8 +2,7 @@
 pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
-
-import {GameProxy, UpgradeableGameRPS} from "src/GameProxy.sol";
+import "src/GameProxy.sol";
 
 contract GameProxyUnitTest is Test {
     GameProxy proxy;

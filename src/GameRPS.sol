@@ -100,7 +100,7 @@ contract GameRPS {
         if (data.targetBlock >= block.number) {
             return 1; // pass and wait
         }
-        if (data.targetBlock < block.number - 256) {
+        if (data.targetBlock + 256 < block.number) {
             return 2; // expired
         }
         return 0; // pass
