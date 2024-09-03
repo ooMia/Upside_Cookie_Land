@@ -29,14 +29,14 @@ contract GameRPS {
         return games[_user].length;
     }
 
-    function play(uint256 _amount, bytes1[] memory _hands) public {
+    function play(uint256 _amount, bytes1[] memory _hands) public virtual {
         bytes32 hands = handsToBytes32(_hands);
         RPSPlay memory data = toRPS(_amount, hands, uint8(_hands.length));
         games[msg.sender].push(data);
         emit GamePlayed(msg.sender, games[msg.sender].length, data.targetBlock, data.timestamp);
     }
 
-    function play(uint256 _amount, bytes32 _hands, uint8 _streak) public {
+    function play(uint256 _amount, bytes32 _hands, uint8 _streak) public virtual {
         RPSPlay memory data = toRPS(_amount, _hands, _streak);
         games[msg.sender].push(data);
         emit GamePlayed(msg.sender, games[msg.sender].length, data.targetBlock, data.timestamp);

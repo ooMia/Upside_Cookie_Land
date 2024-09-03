@@ -9,7 +9,7 @@ import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {GameRPS} from "src/GameRPS.sol";
 
-contract UpgradeableGameRPS is UUPSUpgradeable, GameRPS, Ownable {
+contract UpgradeableGameRPS is UUPSUpgradeable, Ownable, GameRPS {
     constructor() Ownable(msg.sender) {}
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
@@ -23,7 +23,7 @@ contract UpgradeableGameRPS is UUPSUpgradeable, GameRPS, Ownable {
 }
 
 contract GameProxy is ERC1967Proxy {
-    constructor() ERC1967Proxy(address(new UpgradeableGameRPS()), "") {}
+    constructor(UUPSUpgradeable _impl) ERC1967Proxy(address(_impl), "") {}
 
     function implementation() public view returns (address) {
         return _implementation();
