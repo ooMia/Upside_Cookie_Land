@@ -10,17 +10,18 @@ import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeab
 import {GameRPS} from "src/GameRPS.sol";
 
 contract UpgradeableGameRPS is UUPSUpgradeable, OwnableUpgradeable, GameRPS {
-    function initialize() initializer public {
+    function initialize() public initializer {
         __Ownable_init(msg.sender);
     }
+
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
-    function play(uint256 _amount, bytes1[] memory _hands) public override onlyProxy {
-        super.play(_amount, _hands);
+    function play(address _player, uint256 _amount, bytes1[] memory _hands) public override onlyProxy {
+        super.play(_player, _amount, _hands);
     }
 
-    function play(uint256 _amount, bytes32 _hands, uint8 _streak) public override onlyProxy {
-        super.play(_amount, _hands, _streak);
+    function play(address _player, uint256 _amount, bytes32 _hands, uint8 _streak) public override onlyProxy {
+        super.play(_player, _amount, _hands, _streak);
     }
 }
 

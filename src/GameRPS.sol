@@ -12,7 +12,8 @@ contract GameRPS {
     bytes1 public constant PAPER = bytes1(uint8(Hand.Paper));
     bytes1 public constant SCISSORS = bytes1(uint8(Hand.Scissors));
 
-    event GamePlayed(address indexed player, uint256 indexed gameId, uint256 targetBlock, uint256 timestamp);
+    event GamePlayed(address indexed player, uint256 indexed countPlay, uint256 targetBlock, uint256 timestamp);
+    event Claimed(address indexed player, uint256 reward);
 
     struct RPSPlay {
         address player;
@@ -22,24 +23,24 @@ contract GameRPS {
         bytes32 hands;
         uint8 streak;
     }
-
+    
     mapping(address => RPSPlay[]) public games;
 
     function getUserGameLength(address _user) public view returns (uint256) {
         return games[_user].length;
     }
 
-    function play(uint256 _amount, bytes1[] memory _hands) public virtual {
+    function play(address _player, uint256 _amount, bytes1[] memory _hands) public virtual {
         bytes32 hands = handsToBytes32(_hands);
         RPSPlay memory data = toRPS(_amount, hands, uint8(_hands.length));
-        games[msg.sender].push(data);
-        emit GamePlayed(msg.sender, games[msg.sender].length, data.targetBlock, data.timestamp);
+        games[_player].push(data);
+        emit GamePlayed(_player, games[_player].length, data.targetBlock, data.timestamp);
     }
 
-    function play(uint256 _amount, bytes32 _hands, uint8 _streak) public virtual {
+    function play(address _player, uint256 _amount, bytes32 _hands, uint8 _streak) public virtual {
         RPSPlay memory data = toRPS(_amount, _hands, _streak);
-        games[msg.sender].push(data);
-        emit GamePlayed(msg.sender, games[msg.sender].length, data.targetBlock, data.timestamp);
+        games[_player].push(data);
+        emit GamePlayed(_player, games[_player].length, data.targetBlock, data.timestamp);
     }
 
     /* --- Create Data --- */
@@ -71,7 +72,7 @@ contract GameRPS {
         multiplier = 1;
         while (true) {
             multiplier *= rule(_player[_len], _dealer[_len]);
-            if (_len == 0) {
+            if (_len == 0 || multiplier == 0) {
                 break;
             }
             _len--;
@@ -101,19 +102,18 @@ contract GameRPS {
         if (data.targetBlock < block.number - 256) {
             return 2; // expired
         }
+        return 0; // pass
     }
 
     function getDealerHash(RPSPlay memory data) public view returns (bytes32) {
         return keccak256(bytes.concat(abi.encode(data), blockhash(data.targetBlock)));
     }
 
-    function claimReward() public {
-        RPSPlay[] storage myGame = games[msg.sender];
+    function claimReward(address owner) public returns (uint256 prize) {
+        RPSPlay[] storage myGame = games[owner];
         require(myGame.length > 0, "no game");
 
-        uint256 prize;
         uint256 idx;
-
         while (idx < myGame.length) {
             RPSPlay memory data = myGame[idx];
             uint8 code = verify(data);
@@ -129,11 +129,7 @@ contract GameRPS {
         }
 
         if (prize > 0) {
-            (bool res,) = msg.sender.call{value: prize}("");
-            emit Claimed(msg.sender, prize);
-            require(res, "transfer failed");
+            emit Claimed(owner, prize);
         }
     }
-
-    event Claimed(address indexed player, uint256 reward);
 }

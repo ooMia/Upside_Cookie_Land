@@ -51,8 +51,7 @@ contract ClaimTest is Test {
     GameRPS rps;
 
     function setUp() public {
-        user = vm.randomAddress();
-        console.log("user", user);
+        user = tx.origin;
         rps = new GameRPS();
         vm.label(address(rps), "rps");
         vm.startPrank(user);
@@ -66,13 +65,13 @@ contract ClaimTest is Test {
     function pushRPS() public {
         bytes1[] memory hand = new bytes1[](1);
         hand[0] = rps.ROCK();
-        rps.play(100, hand);
+        rps.play(msg.sender, 100, hand);
 
         hand[0] = rps.PAPER();
-        rps.play(100, hand);
+        rps.play(msg.sender, 100, hand);
 
         hand[0] = rps.SCISSORS();
-        rps.play(100, hand);
+        rps.play(msg.sender, 100, hand);
     }
 
     function test_blockHash() public view {
@@ -86,10 +85,7 @@ contract ClaimTest is Test {
 
     function test_claimReward() public {
         vm.roll(304 + 1);
-        vm.deal(address(rps), 100 ether);
-        assertEq(address(user).balance, 0);
-        rps.claimReward();
-        assertGt(address(user).balance, 0);
-        assertApproxEqAbs(address(user).balance, 200, 100);
+        uint256 res = rps.claimReward(tx.origin);
+        assertGt(res, 0);
     }
 }
