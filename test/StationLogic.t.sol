@@ -92,7 +92,7 @@ contract StationTest is Test {
         uint256 id = 0;
         uint256 amount = 100;
         uint256 cost = amount * station.getCookiePrice();
-        vm.deal(user, cost);›
+        vm.deal(user, cost);
         setRPS(100, 200);
 
         buyCookie(amount);

@@ -38,8 +38,6 @@
 
 # 개발 정보
 
-![image](https://github.com/user-attachments/assets/de6fca6d-ba67-45d5-b52a-3dc752ce7935)
-
 ## 계획
 
 - [x] 게임 결과에 따른 상금 반영

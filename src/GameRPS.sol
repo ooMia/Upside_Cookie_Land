@@ -114,14 +114,19 @@ contract GameRPS {
         RPSPlay[] storage myGame = games[owner];
         require(myGame.length > 0, "no game");
 
-        // simply iterate and for code 0 data cumulate prize
+        uint256 idx;
 
-        for (uint256 i = 0; i < myGame.length; ++i) {
-            RPSPlay memory data = myGame[i];
+        while (idx < myGame.length) {
+            RPSPlay memory data = myGame[idx];
             uint8 code = verify(data);
             if (code == 0) {
-                bytes32 dealer = getDealerHash(data);
-                prize += data.bet * calcMultiplier(data.streak, data.hands, dealer);
+                prize += data.bet * calcMultiplier(data.streak, data.hands, getDealerHash(data));
+            }
+            if (code != 1) {
+                myGame[idx] = myGame[myGame.length - 1];
+                myGame.pop();
+            } else {
+                idx++;
             }
         }
     }
