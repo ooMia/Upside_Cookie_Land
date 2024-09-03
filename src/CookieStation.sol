@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.26;
 
-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {Multicall} from "@openzeppelin/contracts/utils/Multicall.sol";
+import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 
 contract Cookie is ERC20 {
     constructor() ERC20("Cookie", "CKE") {
@@ -57,7 +58,34 @@ contract CookieVendor {
     }
 }
 
-contract CookieStation is CookieVendor {
+contract CookieStation is CookieVendor, Ownable, Pausable, Multicall {
+    constructor() Ownable(msg.sender) {}
+
+    function pause() public onlyOwner {
+        _pause();
+    }
+
+    function unpause() public onlyOwner {
+        _unpause();
+    }
+
+    enum Status {
+        NEED_READY,
+        NEED_GAME,
+        SHOULD_WITHDRAW
+    }
+
+    modifier onlyStatus(Status _status) {
+        if (_status == Status.NEED_READY) {
+            require(cookie.balanceOf(msg.sender) > 0, "UserStatus: Buy Cookie");
+        } else if (_status == Status.SHOULD_WITHDRAW) {
+            require(rewards[msg.sender] > 0, "UserStatus: Claim and Withdraw Rewards");
+        } else if (_status == Status.NEED_GAME) {
+            require(gameCount > 0, "UserStatus: Set Game");
+        }
+        _;
+    }
+
     struct GameMeta {
         address logic;
         uint256 minAmount;
@@ -82,7 +110,7 @@ contract CookieStation is CookieVendor {
         return games[_gameId];
     }
 
-    function claim() external {
+    function claim() external onlyStatus(Status.SHOULD_WITHDRAW) {
         uint256 prize;
         (bool res, bytes memory data) = games[0].logic.call(abi.encodeWithSignature("claimReward(address)", msg.sender));
         require(res, "Claim Failed");
@@ -97,7 +125,10 @@ contract CookieStation is CookieVendor {
         cookie.transfer(msg.sender, amount);
     }
 
-    function playRandom(uint256 _gameId, uint256 _amount, uint256 _length, bytes32 _seed) external {
+    function playRandom(uint256 _gameId, uint256 _amount, uint256 _length, bytes32 _seed)
+        external
+        onlyStatus(Status.NEED_GAME)
+    {
         charge(_amount);
         require(_length > 0, "Invalid Length");
         require(_length <= 32, "Invalid Length");
@@ -113,7 +144,7 @@ contract CookieStation is CookieVendor {
         require(res);
     }
 
-    function charge(uint256 _amount) private {
+    function charge(uint256 _amount) private onlyStatus(Status.NEED_READY) {
         require(_amount > 0, "charge: Invalid Amount");
         require(cookie.transferFrom(msg.sender, address(this), _amount), "TransferFailed");
     }
