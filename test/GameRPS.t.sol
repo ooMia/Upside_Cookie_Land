@@ -5,9 +5,7 @@ import "forge-std/Test.sol";
 
 import {GameRPS} from "game/GameRPS.sol";
 
-contract HandCalculationTest is GameRPS, Test {
-    // GameRPS rps = new GameRPS();
-
+contract HandCalculationUnitTest is GameRPS, Test {
     function test_rule() public pure {
         assert(rule(ROCK, ROCK) == 1);
         assert(rule(PAPER, PAPER) == 1);
@@ -49,10 +47,6 @@ contract HandCalculationTest is GameRPS, Test {
 }
 
 contract ClaimTest is Test {
-    // bytes32 internal R1 = handsToBytes32([ROCK]);
-    // bytes32 internal P1 = handsToBytes32([PAPER]);
-    // bytes32 internal S1 = handsToBytes32([SCISSORS]);
-
     address user;
     GameRPS rps;
 

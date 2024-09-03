@@ -20,7 +20,7 @@ contract GameRPS {
         uint256 targetBlock;
         uint256 bet;
         bytes32 hands;
-        uint8 len;
+        uint8 streak;
     }
 
     mapping(address => RPSPlay[]) public games;
@@ -32,6 +32,12 @@ contract GameRPS {
     function play(uint256 _amount, bytes1[] memory _hands) public {
         bytes32 hands = handsToBytes32(_hands);
         RPSPlay memory data = toRPS(_amount, hands, uint8(_hands.length));
+        games[msg.sender].push(data);
+        emit GamePlayed(msg.sender, games[msg.sender].length, data.targetBlock, data.timestamp);
+    }
+
+    function play(uint256 _amount, bytes32 _hands, uint8 _streak) public {
+        RPSPlay memory data = toRPS(_amount, _hands, _streak);
         games[msg.sender].push(data);
         emit GamePlayed(msg.sender, games[msg.sender].length, data.targetBlock, data.timestamp);
     }
@@ -49,13 +55,13 @@ contract GameRPS {
         }
     }
 
-    function toRPS(uint256 _amount, bytes32 _hands, uint8 _len) public view returns (RPSPlay memory result) {
+    function toRPS(uint256 _amount, bytes32 _hands, uint8 _streak) public view returns (RPSPlay memory result) {
         result.timestamp = block.timestamp;
         result.targetBlock = block.number + 4;
         result.bet = _amount;
         result.hands = _hands;
         result.player = tx.origin;
-        result.len = _len;
+        result.streak = _streak;
     }
 
     /* --- Validation --- */
@@ -105,35 +111,29 @@ contract GameRPS {
         RPSPlay[] storage myGame = games[msg.sender];
         require(myGame.length > 0, "no game");
 
-        // uint256 idx = 0;
-        // while (idx < myGame.length) {
-        //     RPSPlay storage data = myGame[idx];
-        //     uint8 code = verify(data);
-        //     if (code == 0) {
-        //         uint256 reward = data.bet * calcMultiplier(32, data.hands, getDealerHash(data));
-        //         payable(msg.sender).transfer(reward);
-        //     }
-        //     if (code != 1) {
-        //         myGame[idx] = myGame[myGame.length - 1];
-        //         myGame.pop();
-        //     }
-        // }
+        uint256 prize;
+        uint256 idx;
 
-        for (uint256 idx = 0; idx < myGame.length; idx++) {
+        while (idx < myGame.length) {
             RPSPlay memory data = myGame[idx];
             uint8 code = verify(data);
             if (code == 0) {
-                uint256 reward = data.bet * calcMultiplier(data.len, data.hands, getDealerHash(data));
-                (bool res,) = msg.sender.call{value: reward}("");
-                emit Claimed(msg.sender, reward, data.hands, getDealerHash(data));
-                require(res, "transfer failed");
+                prize += data.bet * calcMultiplier(data.streak, data.hands, getDealerHash(data));
             }
             if (code != 1) {
                 myGame[idx] = myGame[myGame.length - 1];
                 myGame.pop();
+            } else {
+                idx++;
             }
+        }
+
+        if (prize > 0) {
+            (bool res,) = msg.sender.call{value: prize}("");
+            emit Claimed(msg.sender, prize);
+            require(res, "transfer failed");
         }
     }
 
-    event Claimed(address indexed player, uint256 reward, bytes32 hands, bytes32 dealer);
+    event Claimed(address indexed player, uint256 reward);
 }
