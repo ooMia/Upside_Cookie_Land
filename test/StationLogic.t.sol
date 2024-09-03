@@ -2,8 +2,8 @@
 pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
+import "src/CookieStation.sol";
 
-import {Cookie, CookieStation, CookieVendor} from "src/CookieStation.sol";
 import {GameProxy, UpgradeableGameRPS} from "src/GameProxy.sol";
 import {GameRPS} from "src/GameRPS.sol";
 
@@ -18,8 +18,9 @@ contract StationTest is Test {
         proxy = new GameProxy(game);
         station = new CookieStation(); // have max uint256 cookie
         cookie = station.cookie();
+        setRPS(100, 200);
 
-        user = address(0x123);
+        user = payable(address(0x123));
         vm.startPrank(user);
     }
 
@@ -79,10 +80,6 @@ contract StationTest is Test {
         assertGe(_cookieBalance, _amount);
         assertGe(cookie.allowance(user, address(station)), _amount);
 
-        // vm.expectEmit(true, false, false, true, address(msg.sender ));
-        // //   event GamePlayed(address indexed player, uint256 indexed countPlay, uint256 targetBlock, uint256 timestamp);
-        // emit GameRPS.GamePlayed(address(user), 0, block.number, block.timestamp);
-
         station.playRandom(_id, _amount, _len, bytes32(0));
 
         assertEq(cookie.balanceOf(user), _cookieBalance - _amount);
@@ -93,7 +90,6 @@ contract StationTest is Test {
         uint256 amount = 100;
         uint256 cost = amount * station.getCookiePrice();
         vm.deal(user, cost);
-        setRPS(100, 200);
 
         buyCookie(amount);
         approveCookie(amount);
@@ -114,18 +110,13 @@ contract StationTest is Test {
         approveCookie(amount);
 
         vm.roll(300);
-        setRPS(100, 200);
 
         for (uint256 i = 0; i < iter; ++i) {
             playRPS(id, amount / iter, 1);
         }
         vm.roll(306);
 
-        // assertEq(msg.sender, user);
         station.claim();
-
         assertGt(cookie.balanceOf(address(user)), 0, "No Prize");
     }
-
-    // TODO playRandom setGame Fail Case
 }
