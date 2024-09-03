@@ -79,7 +79,7 @@ contract CookieStation is CookieVendor, Ownable, Pausable, Multicall {
         if (_status == Status.NEED_READY) {
             require(cookie.balanceOf(msg.sender) > 0, "UserStatus: Buy Cookie");
         } else if (_status == Status.SHOULD_WITHDRAW) {
-            require(rewards[msg.sender] > 0, "UserStatus: Claim and Withdraw Rewards");
+            require(rewards[msg.sender] == 0, "UserStatus: Withdraw Rewards First");
         } else if (_status == Status.NEED_GAME) {
             require(gameCount > 0, "UserStatus: Set Game");
         }
@@ -116,6 +116,7 @@ contract CookieStation is CookieVendor, Ownable, Pausable, Multicall {
         require(res, "Claim Failed");
         prize += abi.decode(data, (uint256));
         rewards[msg.sender] += prize;
+
         withdraw();
     }
 
