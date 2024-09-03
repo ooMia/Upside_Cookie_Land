@@ -66,6 +66,7 @@ contract CookieStation is CookieVendor {
 
     mapping(uint256 => GameMeta) internal games;
     uint256 gameCount;
+    mapping(address => uint256) public rewards;
 
     function setGame(uint256 _gameId, address _game, uint256 _minAmount, uint256 _maxAmount) external {
         require(games[_gameId].logic == address(0), "Game Already Exists");
@@ -86,14 +87,14 @@ contract CookieStation is CookieVendor {
         (bool res, bytes memory data) = games[0].logic.call(abi.encodeWithSignature("claimReward(address)", msg.sender));
         require(res, "Claim Failed");
         prize += abi.decode(data, (uint256));
-        // for (uint256 i = 0; i < gameCount; ++i) {
-        //     (bool res, bytes memory data) =
-        //         games[0].logic.call(abi.encodeWithSignature("claimReward(address)", msg.sender));
-        //     if (res) {
-        //         prize += abi.decode(data, (uint256));
-        //     }
-        // }
-        require(cookie.transfer(msg.sender, prize), "TransferFailed");
+        rewards[msg.sender] += prize;
+        withdraw();
+    }
+
+    function withdraw() public {
+        uint256 amount = rewards[msg.sender];
+        rewards[msg.sender] = 0;
+        cookie.transfer(msg.sender, amount);
     }
 
     function playRandom(uint256 _gameId, uint256 _amount, uint256 _length, bytes32 _seed) external {

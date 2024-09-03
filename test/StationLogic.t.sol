@@ -19,7 +19,7 @@ contract StationTest is Test {
         station = new CookieStation(); // have max uint256 cookie
         cookie = station.cookie();
 
-        user = address(0x123);
+        user = payable(address(0x123));
         vm.startPrank(user);
     }
 
