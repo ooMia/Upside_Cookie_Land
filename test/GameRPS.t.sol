@@ -3,7 +3,7 @@ pragma solidity ^0.8.26;
 
 import "forge-std/Test.sol";
 
-import {GameRPS} from "game/GameRPS.sol";
+import {GameRPS} from "src/GameRPS.sol";
 
 contract HandCalculationUnitTest is GameRPS, Test {
     function test_rule() public pure {
