@@ -23,7 +23,7 @@ contract GameRPS {
         bytes32 hands;
         uint8 streak;
     }
-    
+
     mapping(address => RPSPlay[]) public games;
 
     function getUserGameLength(address _user) public view returns (uint256) {
@@ -70,12 +70,13 @@ contract GameRPS {
     function calcMultiplier(uint8 _len, bytes32 _player, bytes32 _dealer) internal pure returns (uint256 multiplier) {
         _len = _len > 32 ? 32 : _len;
         multiplier = 1;
+
         while (true) {
             multiplier *= rule(_player[_len], _dealer[_len]);
-            if (_len == 0 || multiplier == 0) {
+            if (multiplier == 0 || _len == 0) {
                 break;
             }
-            _len--;
+            --_len;
         }
     }
 
@@ -113,23 +114,15 @@ contract GameRPS {
         RPSPlay[] storage myGame = games[owner];
         require(myGame.length > 0, "no game");
 
-        uint256 idx;
-        while (idx < myGame.length) {
-            RPSPlay memory data = myGame[idx];
+        // simply iterate and for code 0 data cumulate prize
+
+        for (uint256 i = 0; i < myGame.length; ++i) {
+            RPSPlay memory data = myGame[i];
             uint8 code = verify(data);
             if (code == 0) {
-                prize += data.bet * calcMultiplier(data.streak, data.hands, getDealerHash(data));
+                bytes32 dealer = getDealerHash(data);
+                prize += data.bet * calcMultiplier(data.streak, data.hands, dealer);
             }
-            if (code != 1) {
-                myGame[idx] = myGame[myGame.length - 1];
-                myGame.pop();
-            } else {
-                idx++;
-            }
-        }
-
-        if (prize > 0) {
-            emit Claimed(owner, prize);
         }
     }
 }

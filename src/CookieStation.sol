@@ -84,9 +84,8 @@ contract CookieStation is CookieVendor {
     function claim() external {
         uint256 prize;
         (bool res, bytes memory data) = games[0].logic.call(abi.encodeWithSignature("claimReward(address)", msg.sender));
-        if (res) {
-            prize += abi.decode(data, (uint256));
-        }
+        require(res, "Claim Failed");
+        prize += abi.decode(data, (uint256));
         // for (uint256 i = 0; i < gameCount; ++i) {
         //     (bool res, bytes memory data) =
         //         games[0].logic.call(abi.encodeWithSignature("claimReward(address)", msg.sender));
@@ -101,8 +100,8 @@ contract CookieStation is CookieVendor {
         charge(_amount);
         require(_length > 0, "Invalid Length");
         require(_length <= 32, "Invalid Length");
-        require(_amount >= games[_gameId].minAmount, "Invalid Amount");
-        require(_amount <= games[_gameId].maxAmount, "Invalid Amount");
+        require(_amount >= games[_gameId].minAmount, "min amount");
+        require(_amount <= games[_gameId].maxAmount, "max Amount");
 
         if (_seed == bytes32(0)) {
             _seed = keccak256(abi.encode(msg.sender, msg.data, cookie.balanceOf(msg.sender)));
@@ -114,7 +113,7 @@ contract CookieStation is CookieVendor {
     }
 
     function charge(uint256 _amount) private {
-        require(_amount > 0, "Invalid Amount");
+        require(_amount > 0, "charge: Invalid Amount");
         require(cookie.transferFrom(msg.sender, address(this), _amount), "TransferFailed");
     }
 }

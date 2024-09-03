@@ -4,20 +4,23 @@ pragma solidity ^0.8.26;
 import "forge-std/Test.sol";
 
 import {Cookie, CookieStation, CookieVendor} from "src/CookieStation.sol";
-import {GameProxy} from "src/GameProxy.sol";
-import {UpgradeableGameRPS} from "src/GameProxy.sol";
+import {GameProxy, UpgradeableGameRPS} from "src/GameProxy.sol";
+import {GameRPS} from "src/GameRPS.sol";
 
 contract StationTest is Test {
     CookieStation station;
     Cookie cookie;
     GameProxy proxy;
-    address user = msg.sender;
+    address user;
 
     function setUp() public {
         UpgradeableGameRPS game = new UpgradeableGameRPS();
         proxy = new GameProxy(game);
         station = new CookieStation(); // have max uint256 cookie
         cookie = station.cookie();
+
+        user = address(0x123);
+        vm.startPrank(user);
     }
 
     /* --- Helper Functions --- */
@@ -35,138 +38,94 @@ contract StationTest is Test {
 
     /* --- Buy Cookie --- */
 
-    function buyCookie_asIs(uint256 _amount) internal {
-        vm.deal(msg.sender, _amount * station.getCookiePrice());
-        assertGe(user.balance, _amount * station.getCookiePrice(), "Insufficient Funds");
-    }
+    function buyCookie(uint256 _amount) public {
+        uint256 cost = _amount * station.getCookiePrice();
+        uint256 prev_balance = user.balance;
 
-    function buyCookie_toBe(uint256 _amount, uint256 _balance) internal view {
-        assertLt(user.balance, _balance);
+        assertGe(prev_balance, cost, "Insufficient Funds");
+        payableCallMustSucceed(cost, abi.encodeWithSelector(station.buyCookie.selector, _amount));
+
+        assertLe(user.balance, prev_balance);
         assertEq(cookie.balanceOf(user), _amount, "Cookie Balance");
     }
 
-    function buyCookie(uint256 _amount) internal {
-        uint256 cost = _amount * station.getCookiePrice();
-        payableCallMustSucceed(cost, abi.encodeWithSelector(station.buyCookie.selector, _amount));
-    }
-
-    /// forge-config: default.fuzz.runs = 1
-    function test_step1_buyCookie(uint8 _number) public {
-        uint256 amount = _number == 0 ? vm.randomUint(1, 255) : _number;
-        uint256 prev_balance = user.balance;
-
-        buyCookie_asIs(amount);
+    function test_step1_buyCookie() public {
+        uint256 amount = 100;
+        uint256 cost = amount * station.getCookiePrice();
+        vm.deal(user, cost);
         buyCookie(amount);
-        buyCookie_toBe(amount, prev_balance);
     }
-    // /* --- Approve Cookie --- */
 
-    // function approveCookie_asIs(uint256 _amount) internal view {
-    //     assertGe(cookie.balanceOf(msg.sender), _amount);
-    // }
+    /* --- Approve Cookie --- */
 
-    // function approveCookie_toBe(uint256 _amount) internal view {
-    //     assertEq(cookie.allowance(msg.sender, address(station)), _amount);
-    // }
+    function approveCookie(uint256 _amount) internal {
+        assertGe(cookie.balanceOf(user), _amount);
+        cookie.approve(address(station), _amount);
+        assertEq(cookie.allowance(user, address(station)), _amount);
+    }
 
-    // function approveCookie(uint256 _amount) internal {
-    //     cookie.approve(address(station), _amount);
-    // }
+    function test_step2_approveCookie() public {
+        uint256 amount = 100;
+        uint256 cost = amount * station.getCookiePrice();
+        vm.deal(user, cost);
+        buyCookie(amount);
+        approveCookie(amount);
+    }
 
-    // /* --- Play RPS --- */
+    /* --- Play RPS --- */
 
-    // function playRPS_asIs(uint256 _amount) internal view {
-    //     assertGe(cookie.balanceOf(msg.sender), _amount);
-    //     assertGe(cookie.allowance(msg.sender, address(station)), _amount);
-    // }
+    function playRPS(uint256 _id, uint256 _amount, uint256 _len) internal {
+        uint256 _cookieBalance = cookie.balanceOf(user);
+        assertGe(_cookieBalance, _amount);
+        assertGe(cookie.allowance(user, address(station)), _amount);
 
-    // function playRPS_toBe(uint256 _amount, uint256 _cookieBalance) internal view {
-    //     assertEq(cookie.balanceOf(msg.sender), _cookieBalance - _amount);
-    // }
+        // vm.expectEmit(true, false, false, true, address(msg.sender ));
+        // //   event GamePlayed(address indexed player, uint256 indexed countPlay, uint256 targetBlock, uint256 timestamp);
+        // emit GameRPS.GamePlayed(address(user), 0, block.number, block.timestamp);
 
-    // function playRPS(uint256 _amount, uint256 _id, uint256 _len) internal {
-    //     // vm.expectEmit(true, true, true, true);
-    //     // emit GamePlayed(address(station), _len, block.number, block.timestamp);
+        station.playRandom(_id, _amount, _len, bytes32(0));
 
-    //     // playRandom(_gameId, _amount, _length, _seed)
-    //     // payableCallMustSucceed(
-    //     //     _id, abi.encodeWithSignature("playRandom(uint256,uint256,uint256,bytes32)", _id, _amount, _len, 1)
-    //     // );
-    //     //     function playRandom(uint256 _gameId, uint256 _amount, uint256 _length, bytes32 _seed) external {
-    //     station.playRandom(_id, _amount, _len, bytes32(0));
-    // }
+        assertEq(cookie.balanceOf(user), _cookieBalance - _amount);
+    }
 
-    // /* --- Claim --- */
+    function test_step3_playRPS() public {
+        uint256 id = 0;
+        uint256 amount = 100;
+        uint256 cost = amount * station.getCookiePrice();
+        vm.deal(user, cost);›
+        setRPS(100, 200);
 
-    // function claim() public {
-    //     vm.roll(200);
-    //     station.claim();
-    // }
+        buyCookie(amount);
+        approveCookie(amount);
 
-    // function claim_asIs() internal {
-    //     assertEq(cookie.balanceOf(address(msg.sender)), 0);
-    //     assertNotEq(station.getGameMeta(0).logic, address(0));
-    //     vm.roll(100);
-    // }
+        playRPS(id, amount, 1);
+    }
 
-    // function claim_toBe() internal view {
-    //     assertGt(address(msg.sender).balance, 0, "No Prize");
-    //     // assertGt(address(msg.sender).balance, 0, "No Prize");
-    //     // assertGt(cookie.balanceOf(address(msg.sender)), 0, "No Prize");
-    // }
+    /* --- Claim --- */
 
-    // /* --- Basic Oracle Actions --- */
-    // function setRandomSeed(bytes32 _seed) public {}
+    function test_step4_claim() public {
+        uint256 id = 0;
+        uint256 iter = 10;
+        uint256 amount = 100 * iter;
+        uint256 cost = amount * station.getCookiePrice();
+        vm.deal(user, cost);
 
-    // /// forge-config: default.fuzz.runs = 1
-    // function test_step2_approveCookie(uint8 _number) public {
-    //     uint256 amount = _number == 0 ? vm.randomUint(1, 255) : _number;
-    //     buyCookie(amount);
+        buyCookie(amount);
+        approveCookie(amount);
 
-    //     approveCookie_asIs(amount);
-    //     approveCookie(amount);
-    //     approveCookie_toBe(amount);
-    // }
+        vm.roll(300);
+        setRPS(100, 200);
 
-    // /// forge-config: default.fuzz.runs = 1
-    // function test_step3_playRPS(uint8 _number) public {
-    //     uint256 _id = 0;
-    //     uint256 _min = station.getGameMeta(_id).minAmount;
-    //     uint256 amount = _number < _min ? vm.randomUint(_min, 255) : _number;
+        for (uint256 i = 0; i < iter; ++i) {
+            playRPS(id, amount / iter, 1);
+        }
+        vm.roll(306);
 
-    //     buyCookie(amount);
-    //     approveCookie(amount);
-    //     uint256 _balance = cookie.balanceOf(msg.sender);
+        // assertEq(msg.sender, user);
+        station.claim();
 
-    //     playRPS_asIs(amount);
-    //     playRPS(amount, _id, 3);
-    //     playRPS_toBe(amount, _balance);
-    // }
-
-    // /// forge-config: default.fuzz.runs = 1
-    // function test_step4_claim(uint8 _number) public {
-    //     uint256 _id = 0;
-    //     uint256 _min = station.getGameMeta(_id).minAmount;
-    //     uint256 amount = _number < _min ? vm.randomUint(_min, 255) : _number;
-    //     amount *= 10;
-
-    //     buyCookie(amount);
-    //     approveCookie(amount);
-    //     for (uint256 i = 0; i < 10; ++i) {
-    //         assertGt(cookie.balanceOf(address(tx.origin)), 0);
-    //         // console.log(address(station).balance);
-    //         uint256 prev = cookie.balanceOf(address(station));
-    //         console.log(cookie.balanceOf(address(station)));
-    //         uint256 next = cookie.balanceOf(address(station));
-    //         assertGt(next, prev);
-    //         // console.log(station.getGameMeta(0).logic);
-    //         // console.log(cookie.balanceOf(address(msg.sender)));
-    //         playRPS(amount / 10, _id, 1);
-    //     }
-    //     claim_asIs();
-    //     claim();
-    //     claim_toBe();
-    // }
+        assertGt(cookie.balanceOf(address(user)), 0, "No Prize");
+    }
 
     // TODO playRandom setGame Fail Case
 }
