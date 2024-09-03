@@ -12,23 +12,33 @@ contract GameProxyUnitTest is Test {
     function setUp() public {
         game = new UpgradeableGameRPS();
         proxy = new GameProxy(game);
-
-        game.transferOwnership(address(this));
-        console.log("game.owner: %s", game.owner());
-        console.log("caller: %s", address(this));
     }
 
     function test_upgrade() public {
+        bool res;
+        bytes memory data;
+
+        address admin = vm.randomAddress();
+        vm.startPrank(admin);
+
+        (res, data) = address(proxy).call(abi.encodeWithSignature("initialize()"));
+        require(res);
+        (res, data) = address(proxy).call(abi.encodeWithSignature("owner()"));
+        require(res);
+
+        address _owner = abi.decode(data, (address));
+
+        console.log("owner: %s", _owner);
+        console.log(proxy.implementation());
+        // game.transferOwnership(address(proxy));
+
         console.log("old implementation address: %s", proxy.implementation());
         UpgradeableGameRPS new_game = new UpgradeableGameRPS();
-        assertNotEq(address(new_game), address(game));
-        new_game.transferOwnership(address(this));
         console.log("new_game.owner: %s", new_game.owner());
         console.log("caller: %s", address(this));
 
-        (bool res,) = address(proxy).call(
-            abi.encodeWithSignature("upgradeToAndCall(address,bytes)", address(new_game), "")
-        );
+        (res, data) =
+            address(proxy).call(abi.encodeWithSignature("upgradeToAndCall(address,bytes)", address(new_game), ""));
         require(res, "upgrade failed");
         console.log("new implementation address: %s", proxy.implementation());
     }

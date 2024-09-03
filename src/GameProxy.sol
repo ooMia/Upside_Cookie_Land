@@ -3,14 +3,16 @@ pragma solidity ^0.8.26;
 
 import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 
 import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {GameRPS} from "src/GameRPS.sol";
 
-contract UpgradeableGameRPS is UUPSUpgradeable, Ownable, GameRPS {
-    constructor() Ownable(msg.sender) {}
+contract UpgradeableGameRPS is UUPSUpgradeable, OwnableUpgradeable, GameRPS {
+    function initialize() initializer public {
+        __Ownable_init(msg.sender);
+    }
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     function play(uint256 _amount, bytes1[] memory _hands) public override onlyProxy {
