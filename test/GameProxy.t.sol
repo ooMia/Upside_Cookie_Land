@@ -14,38 +14,29 @@ contract GameProxyUnitTest is Test {
         proxy = new GameProxy(game);
     }
 
-    function test_upgrade() public {
+    function callMustSucceed(address _target, bytes memory _data) private returns (bytes memory data) {
         bool res;
-        bytes memory data;
-
-        address admin = vm.randomAddress();
-        vm.startPrank(admin);
-
-        (res, data) = address(proxy).call(abi.encodeWithSignature("initialize()"));
-        require(res);
-        (res, data) = address(proxy).call(abi.encodeWithSignature("owner()"));
-        require(res);
-
-        address _owner = abi.decode(data, (address));
-
-        console.log("owner: %s", _owner);
-        console.log(proxy.implementation());
-        // game.transferOwnership(address(proxy));
-
-        console.log("old implementation address: %s", proxy.implementation());
-        UpgradeableGameRPS new_game = new UpgradeableGameRPS();
-        console.log("new_game.owner: %s", new_game.owner());
-        console.log("caller: %s", address(this));
-
-        (res, data) =
-            address(proxy).call(abi.encodeWithSignature("upgradeToAndCall(address,bytes)", address(new_game), ""));
-        require(res, "upgrade failed");
-        console.log("new implementation address: %s", proxy.implementation());
+        (res, data) = address(_target).call(_data);
+        if (!res) {
+            console.log("callMustSucceed failed with target: %s", _target);
+            console.logBytes(data);
+            revert();
+        }
     }
 
-    // function test_play() public {
-    //     bytes1[] memory hands = [game.ROCK, game.PAPER, game.SCISSORS];
-    //     proxy.play(100, hands);
-    //     assertEq(game.getUserGameLength(address(this)), 1);
-    // }
+    function test_upgrade() public {
+        address prev_impl = proxy.implementation();
+        console.log("old implementation address: %s", prev_impl);
+        callMustSucceed(address(proxy), abi.encodeWithSignature("initialize()"));
+        callMustSucceed(address(proxy), abi.encodeWithSignature("owner()"));
+
+        UpgradeableGameRPS new_game = new UpgradeableGameRPS();
+
+        callMustSucceed(
+            address(proxy), abi.encodeWithSignature("upgradeToAndCall(address,bytes)", address(new_game), "")
+        );
+
+        console.log("new implementation address: %s", proxy.implementation());
+        assertNotEq(prev_impl, proxy.implementation());
+    }
 }
