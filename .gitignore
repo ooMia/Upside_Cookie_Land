@@ -7,12 +7,9 @@ out/
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
-# Docs
-docs/
-.gas-snapshot
-
 # Dotenv file
 .env
+.gas-snapshot
 
 # Yarn Environment
 node_modules/
