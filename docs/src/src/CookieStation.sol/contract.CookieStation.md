@@ -1,17 +1,17 @@
 # CookieStation
-
-[Git Source](https://github.com/ooMia/Upside_Cookie_Land/blob/19596b6815ecddf8aaab1844bf71a89e8b87f4a0/src/CookieStation.sol)
+[Git Source](https://github.com/ooMia/Upside_Cookie_Land/blob/6b987a7026979291381fc0fd715dacee96957cea/src/CookieStation.sol)
 
 **Inherits:**
 [CookieVendor](/src/CookieStation.sol/contract.CookieVendor.md), Ownable, Pausable, Multicall
 
-## State Variables
 
+## State Variables
 ### games
 
 ```solidity
 mapping(uint256 => GameMeta) internal games;
 ```
+
 
 ### gameCount
 
@@ -19,15 +19,17 @@ mapping(uint256 => GameMeta) internal games;
 uint256 gameCount;
 ```
 
+
 ### rewards
 
 ```solidity
 mapping(address => uint256) public rewards;
 ```
 
-## Functions
 
+## Functions
 ### constructor
+
 
 ```solidity
 constructor() Ownable(msg.sender);
@@ -35,11 +37,13 @@ constructor() Ownable(msg.sender);
 
 ### pause
 
+
 ```solidity
 function pause() public onlyOwner;
 ```
 
 ### unpause
+
 
 ```solidity
 function unpause() public onlyOwner;
@@ -47,11 +51,13 @@ function unpause() public onlyOwner;
 
 ### onlyStatus
 
+
 ```solidity
 modifier onlyStatus(Status _status);
 ```
 
 ### setGame
+
 
 ```solidity
 function setGame(uint256 _gameId, address _game, uint256 _minAmount, uint256 _maxAmount) external onlyOwner;
@@ -59,11 +65,13 @@ function setGame(uint256 _gameId, address _game, uint256 _minAmount, uint256 _ma
 
 ### getGameMeta
 
+
 ```solidity
 function getGameMeta(uint256 _gameId) external view returns (GameMeta memory);
 ```
 
 ### claim
+
 
 ```solidity
 function claim() external onlyStatus(Status.SHOULD_WITHDRAW);
@@ -71,11 +79,13 @@ function claim() external onlyStatus(Status.SHOULD_WITHDRAW);
 
 ### withdraw
 
+
 ```solidity
 function withdraw() public;
 ```
 
 ### playRandom
+
 
 ```solidity
 function playRandom(uint256 _gameId, uint256 _amount, uint256 _length, bytes32 _seed)
@@ -85,12 +95,12 @@ function playRandom(uint256 _gameId, uint256 _amount, uint256 _length, bytes32 _
 
 ### charge
 
+
 ```solidity
 function charge(uint256 _amount) private onlyStatus(Status.NEED_READY);
 ```
 
 ## Structs
-
 ### GameMeta
 
 ```solidity
@@ -102,7 +112,6 @@ struct GameMeta {
 ```
 
 ## Enums
-
 ### Status
 
 ```solidity
@@ -112,3 +121,4 @@ enum Status {
     SHOULD_WITHDRAW
 }
 ```
+
