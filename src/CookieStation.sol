@@ -114,8 +114,6 @@ contract CookieStation is CookieVendor, Ownable, Pausable, Multicall {
         require(res, "Claim Failed");
         prize += abi.decode(data, (uint256));
         rewards[msg.sender] += prize;
-
-        withdraw();
     }
 
     function withdraw() public {
