@@ -2,6 +2,7 @@ node_modules
 
 # 빌드 출력 디렉토리
 out
+docs
 
 # 환경 설정 파일
 .env
