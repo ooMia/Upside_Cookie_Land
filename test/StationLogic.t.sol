@@ -117,6 +117,7 @@ contract StationTest is Test {
         vm.roll(306);
 
         station.claim();
+        station.withdraw();
         assertGt(cookie.balanceOf(address(user)), 0, "No Prize");
     }
 }
