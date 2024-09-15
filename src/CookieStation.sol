@@ -57,7 +57,7 @@ contract CookieVendor {
 }
 
 contract CookieStation is CookieVendor, Ownable, Pausable, Multicall {
-    constructor() Ownable(msg.sender) {}
+    constructor() payable Ownable(msg.sender) {}
 
     function pause() public onlyOwner {
         _pause();
