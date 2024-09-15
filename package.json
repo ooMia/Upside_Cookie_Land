@@ -15,7 +15,8 @@
     "compile": "forge compile",
     "remapping": "forge remappings > remappings.txt",
     "deploy": "forge script script/Deploy.s.sol:Deploy",
-    "info": "cast client"
+    "info": "cast client",
+    "docs": "forge doc -o docs"
   },
   "repository": {
     "type": "git",
