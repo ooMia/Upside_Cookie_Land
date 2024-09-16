@@ -1,9 +1,0 @@
-# Summary
-- [Home](README.md)
-# src
-  - [Cookie](src/CookieStation.sol/contract.Cookie.md)
-  - [CookieVendor](src/CookieStation.sol/contract.CookieVendor.md)
-  - [CookieStation](src/CookieStation.sol/contract.CookieStation.md)
-  - [UpgradeableGameRPS](src/GameProxy.sol/contract.UpgradeableGameRPS.md)
-  - [GameProxy](src/GameProxy.sol/contract.GameProxy.md)
-  - [GameRPS](src/GameRPS.sol/contract.GameRPS.md)

@@ -186,18 +186,17 @@
 <h1 id="upside_cookie_land"><a class="header" href="#upside_cookie_land">Upside_Cookie_Land</a></h1>
 <p><code>Upside_Cookie_Land</code>에 오신 것을 환영합니다. <code>쿠키</code> 토큰으로 게임을 즐기고, 상금을 획득하세요. 현재는 가위바위보 게임만 제공하고 있습니다.</p>
 <h3 id="쿠키-토큰"><a class="header" href="#쿠키-토큰">쿠키 토큰</a></h3>
-<p>토큰은 ETH와 1:1 비율로 교환됩니다.</p>
+<p>토큰은 ETH와 1:100 비율로 교환됩니다.</p>
 <h1 id="게임-소개"><a class="header" href="#게임-소개">게임 소개</a></h1>
 <p><code>Station</code> 컨트랙트의 <code>play</code> 함수들을 호출하는 것으로 게임을 시작합니다.
 운영자에 의해 검증된 게임만 추가할 수 있으며, 플레이어는 고유한 ID를 통해 게임을 선택할 수 있습니다.</p>
 <h2 id="가위바위보-id-0"><a class="header" href="#가위바위보-id-0">가위바위보 (id: 0)</a></h2>
-<p><code>쿠키</code> 코인을 사용하여 가위바위보 게임을 즐기세요. 게임 결과에 따라 상금을 획득하거나 잃을 수 있습니다. 게임 결과는 컨트랙트 내부의 난수를 통해 생성되며, 사용자는 이를 통해 게임 결과를 검증할 수 있습니다.</p>
+<p><code>쿠키</code> 코인을 사용하여 가위바위보 게임을 즐기세요. 게임 결과에 따라 상금을 획득하거나 잃을 수 있습니다. 게임 결과는 컨트랙트 내부에서 생성된 난수를 통해 결정됩니다.</p>
 <h3 id="게임-규칙"><a class="header" href="#게임-규칙">게임 규칙</a></h3>
 <p>참가비: 100 이상의 <code>쿠키</code> 코인</p>
 <h3 id="사용자-입력"><a class="header" href="#사용자-입력">사용자 입력</a></h3>
 <ul>
-<li><code>enum Hand { Rock, Paper, Scissors }</code>으로 직접 원하는 입력을 전달할 수 있습니다.</li>
-<li>무작위로 플레이하는 기능도 제공합니다.</li>
+<li>현재 무작위로 플레이하는 기능만을 제공합니다. 원하는 결과값을 만들기 위해 적절한 시드를 전달해보세요!</li>
 </ul>
 <h3 id="결과"><a class="header" href="#결과">결과</a></h3>
 <p>승리: 2배, 무승부: 1배, 패배: 0배</p>
@@ -221,7 +220,7 @@ jackpot에 따른 쿠키 가격 변동 (최대 2배)</li>
 추가 게임 제공</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cookie"><a class="header" href="#cookie">Cookie</a></h1>
-<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/6b987a7026979291381fc0fd715dacee96957cea/src/CookieStation.sol">Git Source</a></p>
+<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/ff1cb092c2284daf945b3004a61b465789ebe395/src/CookieStation.sol">Git Source</a></p>
 <p><strong>Inherits:</strong>
 ERC20</p>
 <h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
@@ -229,7 +228,7 @@ ERC20</p>
 <pre><code class="language-solidity">constructor() ERC20("Cookie", "CKE");
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cookievendor"><a class="header" href="#cookievendor">CookieVendor</a></h1>
-<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/6b987a7026979291381fc0fd715dacee96957cea/src/CookieStation.sol">Git Source</a></p>
+<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/ff1cb092c2284daf945b3004a61b465789ebe395/src/CookieStation.sol">Git Source</a></p>
 <h2 id="state-variables"><a class="header" href="#state-variables">State Variables</a></h2>
 <h3 id="cookie-1"><a class="header" href="#cookie-1">cookie</a></h3>
 <pre><code class="language-solidity">Cookie public cookie;
@@ -267,7 +266,7 @@ ERC20</p>
 <pre><code class="language-solidity">error TransferFailed();
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cookiestation"><a class="header" href="#cookiestation">CookieStation</a></h1>
-<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/6b987a7026979291381fc0fd715dacee96957cea/src/CookieStation.sol">Git Source</a></p>
+<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/ff1cb092c2284daf945b3004a61b465789ebe395/src/CookieStation.sol">Git Source</a></p>
 <p><strong>Inherits:</strong>
 <a href="src/CookieStation.sol//src/CookieStation.sol/contract.CookieVendor.html">CookieVendor</a>, Ownable, Pausable, Multicall</p>
 <h2 id="state-variables-1"><a class="header" href="#state-variables-1">State Variables</a></h2>
@@ -282,7 +281,7 @@ ERC20</p>
 </code></pre>
 <h2 id="functions-2"><a class="header" href="#functions-2">Functions</a></h2>
 <h3 id="constructor-2"><a class="header" href="#constructor-2">constructor</a></h3>
-<pre><code class="language-solidity">constructor() Ownable(msg.sender);
+<pre><code class="language-solidity">constructor() payable Ownable(msg.sender);
 </code></pre>
 <h3 id="pause"><a class="header" href="#pause">pause</a></h3>
 <pre><code class="language-solidity">function pause() public onlyOwner;
@@ -330,7 +329,7 @@ ERC20</p>
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="upgradeablegamerps"><a class="header" href="#upgradeablegamerps">UpgradeableGameRPS</a></h1>
-<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/6b987a7026979291381fc0fd715dacee96957cea/src/GameProxy.sol">Git Source</a></p>
+<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/ff1cb092c2284daf945b3004a61b465789ebe395/src/GameProxy.sol">Git Source</a></p>
 <p><strong>Inherits:</strong>
 UUPSUpgradeable, OwnableUpgradeable, <a href="src/GameProxy.sol//src/GameRPS.sol/contract.GameRPS.html">GameRPS</a></p>
 <h2 id="functions-3"><a class="header" href="#functions-3">Functions</a></h2>
@@ -341,7 +340,7 @@ UUPSUpgradeable, OwnableUpgradeable, <a href="src/GameProxy.sol//src/GameRPS.sol
 <pre><code class="language-solidity">function _authorizeUpgrade(address newImplementation) internal override onlyOwner;
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gameproxy"><a class="header" href="#gameproxy">GameProxy</a></h1>
-<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/6b987a7026979291381fc0fd715dacee96957cea/src/GameProxy.sol">Git Source</a></p>
+<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/ff1cb092c2284daf945b3004a61b465789ebe395/src/GameProxy.sol">Git Source</a></p>
 <p><strong>Inherits:</strong>
 ERC1967Proxy</p>
 <h2 id="functions-4"><a class="header" href="#functions-4">Functions</a></h2>
@@ -355,7 +354,7 @@ ERC1967Proxy</p>
 <pre><code class="language-solidity">receive() external payable;
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gamerps"><a class="header" href="#gamerps">GameRPS</a></h1>
-<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/6b987a7026979291381fc0fd715dacee96957cea/src/GameRPS.sol">Git Source</a></p>
+<p><a href="https://github.com/ooMia/Upside_Cookie_Land/blob/ff1cb092c2284daf945b3004a61b465789ebe395/src/GameRPS.sol">Git Source</a></p>
 <h2 id="state-variables-2"><a class="header" href="#state-variables-2">State Variables</a></h2>
 <h3 id="rock"><a class="header" href="#rock">ROCK</a></h3>
 <pre><code class="language-solidity">bytes1 public constant ROCK = bytes1(uint8(Hand.Rock));

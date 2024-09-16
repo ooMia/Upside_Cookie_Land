@@ -185,18 +185,17 @@
 <h1 id="upside_cookie_land"><a class="header" href="#upside_cookie_land">Upside_Cookie_Land</a></h1>
 <p><code>Upside_Cookie_Land</code>에 오신 것을 환영합니다. <code>쿠키</code> 토큰으로 게임을 즐기고, 상금을 획득하세요. 현재는 가위바위보 게임만 제공하고 있습니다.</p>
 <h3 id="쿠키-토큰"><a class="header" href="#쿠키-토큰">쿠키 토큰</a></h3>
-<p>토큰은 ETH와 1:1 비율로 교환됩니다.</p>
+<p>토큰은 ETH와 1:100 비율로 교환됩니다.</p>
 <h1 id="게임-소개"><a class="header" href="#게임-소개">게임 소개</a></h1>
 <p><code>Station</code> 컨트랙트의 <code>play</code> 함수들을 호출하는 것으로 게임을 시작합니다.
 운영자에 의해 검증된 게임만 추가할 수 있으며, 플레이어는 고유한 ID를 통해 게임을 선택할 수 있습니다.</p>
 <h2 id="가위바위보-id-0"><a class="header" href="#가위바위보-id-0">가위바위보 (id: 0)</a></h2>
-<p><code>쿠키</code> 코인을 사용하여 가위바위보 게임을 즐기세요. 게임 결과에 따라 상금을 획득하거나 잃을 수 있습니다. 게임 결과는 컨트랙트 내부의 난수를 통해 생성되며, 사용자는 이를 통해 게임 결과를 검증할 수 있습니다.</p>
+<p><code>쿠키</code> 코인을 사용하여 가위바위보 게임을 즐기세요. 게임 결과에 따라 상금을 획득하거나 잃을 수 있습니다. 게임 결과는 컨트랙트 내부에서 생성된 난수를 통해 결정됩니다.</p>
 <h3 id="게임-규칙"><a class="header" href="#게임-규칙">게임 규칙</a></h3>
 <p>참가비: 100 이상의 <code>쿠키</code> 코인</p>
 <h3 id="사용자-입력"><a class="header" href="#사용자-입력">사용자 입력</a></h3>
 <ul>
-<li><code>enum Hand { Rock, Paper, Scissors }</code>으로 직접 원하는 입력을 전달할 수 있습니다.</li>
-<li>무작위로 플레이하는 기능도 제공합니다.</li>
+<li>현재 무작위로 플레이하는 기능만을 제공합니다. 원하는 결과값을 만들기 위해 적절한 시드를 전달해보세요!</li>
 </ul>
 <h3 id="결과"><a class="header" href="#결과">결과</a></h3>
 <p>승리: 2배, 무승부: 1배, 패배: 0배</p>
